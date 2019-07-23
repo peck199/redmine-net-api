@@ -26,7 +26,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE)]
-    public class IssueChild : Identifiable<IssueChild>, IXmlSerializable, IEquatable<IssueChild>, ICloneable
+    public class IssueChild : Identifiable<IssueChild>, IXmlSerializable, ICloneable
     {
         /// <summary>
         /// Gets or sets the tracker.
@@ -97,7 +97,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IssueChild other)
+        public override bool Equals(IssueChild other)
         {
             if (other == null) return false;
             return (Id == other.Id && Tracker == other.Tracker && Subject == other.Subject);

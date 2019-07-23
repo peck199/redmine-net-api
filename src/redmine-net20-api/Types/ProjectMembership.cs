@@ -32,7 +32,7 @@ namespace Redmine.Net.Api.Types
     /// DELETE - Deletes a memberships. Memberships inherited from a group membership can not be deleted. You must delete the group membership.
     /// </summary>
     [XmlRoot(RedmineKeys.MEMBERSHIP)]
-    public class ProjectMembership : Identifiable<ProjectMembership>, IEquatable<ProjectMembership>, IXmlSerializable
+    public class ProjectMembership : Identifiable<ProjectMembership>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
@@ -72,7 +72,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(ProjectMembership other)
+        public override bool Equals(ProjectMembership other)
         {
             if (other == null) return false;
             return (Id == other.Id

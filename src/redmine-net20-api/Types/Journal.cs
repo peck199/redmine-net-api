@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.JOURNAL)]
-    public class Journal : Identifiable<Journal>, IEquatable<Journal>, IXmlSerializable
+    public class Journal : Identifiable<Journal>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the user.
@@ -124,7 +124,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Journal other)
+        public override bool Equals(Journal other)
         {
             if (other == null) return false;
             return Id == other.Id

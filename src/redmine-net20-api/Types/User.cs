@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.1
     /// </summary>
     [XmlRoot(RedmineKeys.USER)]
-    public class User : Identifiable<User>, IXmlSerializable, IEquatable<User>
+    public class User : Identifiable<User>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the user login.
@@ -228,7 +228,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(User other)
+        public override bool Equals(User other)
         {
             if (other == null) return false;
             return (

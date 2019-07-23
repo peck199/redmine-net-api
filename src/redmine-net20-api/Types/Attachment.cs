@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.3
     /// </summary>
     [XmlRoot(RedmineKeys.ATTACHMENT)]
-    public class Attachment : Identifiable<Attachment>, IXmlSerializable, IEquatable<Attachment>
+    public class Attachment : Identifiable<Attachment>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the name of the file.
@@ -133,7 +133,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Attachment other)
+        public override bool Equals(Attachment other)
         {
             if (other == null) return false;
             return (Id == other.Id

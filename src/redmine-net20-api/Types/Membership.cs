@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// Only the roles can be updated, the project and the user of a membership are read-only.
     /// </summary>
     [XmlRoot(RedmineKeys.MEMBERSHIP)]
-    public class Membership : Identifiable<Membership>, IEquatable<Membership>, IXmlSerializable
+    public class Membership : Identifiable<Membership>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
@@ -90,7 +90,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Membership other)
+        public override bool Equals(Membership other)
         {
             if (other == null) return false;
             return (Id == other.Id && 

@@ -26,7 +26,7 @@ namespace Redmine.Net.Api.Types
     /// <summary>
     /// 
     /// </summary>
-    public class IdentifiableName : Identifiable<IdentifiableName>, IXmlSerializable, IEquatable<IdentifiableName>
+    public class IdentifiableName : Identifiable<IdentifiableName>, IXmlSerializable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
@@ -96,7 +96,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IdentifiableName other)
+        public override bool Equals(IdentifiableName other)
         {
             if (other == null) return false;
             return (Id == other.Id && Name == other.Name);

@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.1
     /// </summary>
     [XmlRoot(RedmineKeys.TIME_ENTRY)]
-    public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IEquatable<TimeEntry>, IXmlSerializable
+    public class TimeEntry : Identifiable<TimeEntry>, ICloneable, IXmlSerializable
     {
         private string comments;
 
@@ -211,7 +211,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(TimeEntry other)
+        public override bool Equals(TimeEntry other)
         {
             if (other == null) return false;
             return (Id == other.Id

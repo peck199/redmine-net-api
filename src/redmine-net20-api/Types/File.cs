@@ -29,7 +29,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.FILE)]
-    public class File : Identifiable<File>, IEquatable<File>, IXmlSerializable
+    public class File : Identifiable<File>, IXmlSerializable
     {
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(File other)
+        public override bool Equals(File other)
         {
             if (other == null) return false;
             return (Id == other.Id 

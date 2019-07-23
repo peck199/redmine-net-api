@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.1
     /// </summary>
     [XmlRoot(RedmineKeys.NEWS)]
-    public class News : Identifiable<News>, IEquatable<News>, IXmlSerializable
+    public class News : Identifiable<News>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
@@ -124,7 +124,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(News other)
+        public override bool Equals(News other)
         {
             if (other == null) return false;
             return (Id == other.Id

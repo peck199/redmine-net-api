@@ -31,7 +31,7 @@ namespace Redmine.Net.Api.Types
     /// See Issue journals for more information.
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE)]
-    public class Issue : Identifiable<Issue>, IXmlSerializable, IEquatable<Issue>, ICloneable
+    public class Issue : Identifiable<Issue>, IXmlSerializable, ICloneable
     {
         /// <summary>
         /// Gets or sets the project.
@@ -523,7 +523,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Issue other)
+        public override bool Equals(Issue other)
         {
             if (other == null) return false;
             return (

@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml.Serialization;
 using Redmine.Net.Api.Internals;
 
@@ -24,7 +25,7 @@ namespace Redmine.Net.Api.Types
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-	public abstract class Identifiable<T> where T : Identifiable<T>, IEquatable<T>
+	public abstract class Identifiable<T> : IEquatable<T> where T : Identifiable<T>
     {
 
         /// <summary>
@@ -33,6 +34,17 @@ namespace Redmine.Net.Api.Types
         /// <value>The id.</value>
         [XmlAttribute(RedmineKeys.ID)]
         public int Id { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public virtual bool Equals(T other)
+        {
+            if (other == null) return false;
+            return Id == other.Id;
+        }
 
         /// <summary>
         /// 
@@ -101,7 +113,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Identifiable: Id={0}]", Id);
+            return $"Id={Id.ToString(CultureInfo.InvariantCulture)}";
         }
     }
 }

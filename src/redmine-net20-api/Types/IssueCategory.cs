@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.3
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
-    public class IssueCategory : Identifiable<IssueCategory>, IEquatable<IssueCategory>, IXmlSerializable
+    public class IssueCategory : Identifiable<IssueCategory>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the project.
@@ -61,7 +61,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IssueCategory other)
+        public override bool Equals(IssueCategory other)
         {
             if (other == null) return false;
             return (Id == other.Id && Project == other.Project && AsignTo == other.AsignTo && Name == other.Name);

@@ -28,7 +28,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 2.2
     /// </summary>
     [XmlRoot(RedmineKeys.WIKI_PAGE)]
-    public class WikiPage : Identifiable<WikiPage>, IXmlSerializable, IEquatable<WikiPage>
+    public class WikiPage : Identifiable<WikiPage>, IXmlSerializable
     {
         /// <summary>
         /// 
@@ -164,7 +164,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(WikiPage other)
+        public override bool Equals(WikiPage other)
         {
             if (other == null) return false;
 

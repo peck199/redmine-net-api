@@ -27,7 +27,7 @@ namespace Redmine.Net.Api.Types
     /// Availability 1.3
     /// </summary>
     [XmlRoot(RedmineKeys.RELATION)]
-    public class IssueRelation : Identifiable<IssueRelation>, IXmlSerializable, IEquatable<IssueRelation>
+    public class IssueRelation : Identifiable<IssueRelation>, IXmlSerializable
     {
         /// <summary>
         /// Gets or sets the issue id.
@@ -136,7 +136,7 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(IssueRelation other)
+        public override bool Equals(IssueRelation other)
         {
             if (other == null) return false;
             return (Id == other.Id && IssueId == other.IssueId && IssueToId == other.IssueToId && Type == other.Type && Delay == other.Delay);
