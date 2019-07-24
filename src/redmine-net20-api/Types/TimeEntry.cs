@@ -22,7 +22,6 @@ using System.Xml.Serialization;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 
-
 namespace Redmine.Net.Api.Types
 {
     /// <summary>
@@ -85,17 +84,7 @@ namespace Redmine.Net.Api.Types
         public String Comments
         {
             get { return comments; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                {
-                    if (value.Length > 255)
-                    {
-                        value = value.Substring(0, 255);
-                    }
-                }
-                comments = value;
-            }
+            set { comments = value.Truncate(255); }
         }
 
         /// <summary>
@@ -214,6 +203,7 @@ namespace Redmine.Net.Api.Types
         public override bool Equals(TimeEntry other)
         {
             if (other == null) return false;
+
             return (Id == other.Id
                 && Issue == other.Issue
                 && Project == other.Project
@@ -224,7 +214,9 @@ namespace Redmine.Net.Api.Types
                 && User == other.User
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
-                && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null));
+                && (CustomFields != null
+                ? CustomFields.Equals<IssueCustomField>(other.CustomFields)
+                : other.CustomFields == null));
         }
 
         /// <summary>
