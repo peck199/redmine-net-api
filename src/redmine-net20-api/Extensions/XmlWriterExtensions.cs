@@ -69,7 +69,11 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="elementName">Name of the element.</param>
         /// <param name="type">The type.</param>
         /// <param name="f">The f.</param>
+#if NET20
         public static void WriteArrayIds(this XmlWriter writer, IEnumerable collection, string elementName, Type type, Func<object, int> f)
+#else
+        public static void WriteArrayIds(this XmlWriter writer, IEnumerable collection, string elementName, Type type, System.Func<object, int> f)
+#endif
         {
             if (collection == null) return;
             writer.WriteStartElement(elementName);

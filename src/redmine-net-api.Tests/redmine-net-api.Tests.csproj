@@ -95,12 +95,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\redmine-net450-api\redmine-net450-api.csproj">
-      <Project>{AEDFD095-F4B0-4630-B41A-9A22169456E9}</Project>
-      <Name>redmine-net450-api</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
