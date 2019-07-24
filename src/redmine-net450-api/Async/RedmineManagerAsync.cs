@@ -186,7 +186,13 @@ namespace Redmine.Net.Api.Async
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty, "RemoveWatcherAsync").ConfigureAwait(false);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager"></param>
+        /// <param name="include"></param>
+        /// <returns></returns>
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
             var parameters = new NameValueCollection();
@@ -199,6 +205,13 @@ namespace Redmine.Net.Api.Async
             return await CountAsync<T>(redmineManager,parameters).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public static async Task<int> CountAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize = 1, offset = 0;

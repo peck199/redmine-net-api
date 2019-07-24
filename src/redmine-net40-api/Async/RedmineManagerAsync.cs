@@ -160,11 +160,25 @@ namespace Redmine.Net.Api.Async
             return CreateObjectAsync(redmineManager, obj, null);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager"></param>
+        /// <param name="include"></param>
+        /// <returns></returns>
         public static Task<int> CountAsync<T>(this RedmineManager redmineManager, params string[] include) where T : class, new()
         {
             return Task.Factory.StartNew(()=> redmineManager.Count<T>(include));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
 
         public static Task<int> CountAsync<T>(this RedmineManager redmineManager, NameValueCollection parameters) where T : class, new()
         {

@@ -369,6 +369,12 @@ namespace Redmine.Net.Api
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.DELETE, string.Empty, "DeleteWikiPage");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public int Count<T>(NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize = 1, offset = 0;
@@ -435,6 +441,12 @@ namespace Redmine.Net.Api
             return WebApiHelper.ExecuteDownloadList<T>(this, url, "GetObjectList", parameters);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="include"></param>
+        /// <returns></returns>
         public int Count<T>(params string[] include) where T : class, new()
         {
             var parameters = new NameValueCollection();
