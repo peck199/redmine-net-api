@@ -15,44 +15,45 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    [XmlRoot(RedmineKeys.CHANGESET)]
-    public class ChangeSet : IXmlSerializable, IEquatable<ChangeSet>
+    [XmlRoot(RedmineKeys.CHANGE_SET)]
+    public sealed class ChangeSet : IXmlSerializable, IJsonSerializable, IEquatable<ChangeSet>
     {
+        #region Properties
         /// <summary>
         /// 
         /// </summary>
-        [XmlAttribute(RedmineKeys.REVISION)]
-        public int Revision { get; set; }
+        public int Revision { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.USER)]
-        public IdentifiableName User { get; set; }
+        public IdentifiableName User { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.COMMENTS)]
-        public string Comments { get; set; }
+        public string Comments { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.COMMITTED_ON, IsNullable = true)]
-        public DateTime? CommittedOn { get; set; }
+        public DateTime? CommittedOn { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerializable
         /// <summary>
         /// 
         /// </summary>
@@ -94,7 +95,50 @@ namespace Redmine.Net.Api.Types
         /// </summary>
         /// <param name="writer"></param>
         public void WriteXml(XmlWriter writer) { }
+        #endregion
 
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
+
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsString(); break;
+
+                    case RedmineKeys.COMMITTED_ON: CommittedOn = reader.ReadAsDateTime(); break;
+
+                    case RedmineKeys.REVISION: Revision = reader.ReadAsInt(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer) { }
+        #endregion
+       
+        #region Implementation of IEquatable<ChangeSet>
         /// <summary>
         /// 
         /// </summary>
@@ -139,6 +183,7 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
@@ -146,7 +191,11 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Revision: {0}, User: '{1}', CommitedOn: {2}, Comments: '{3}'", Revision, User, CommittedOn, Comments);
+            return $@"[{nameof(ChangeSet)}: 
+Revision={Revision.ToString(CultureInfo.InvariantCulture)}, 
+User='{User}', 
+CommittedOn={CommittedOn?.ToString("u")}, 
+Comments='{Comments}']";
         }
     }
 }

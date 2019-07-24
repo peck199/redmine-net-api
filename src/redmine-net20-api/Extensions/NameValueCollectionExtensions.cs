@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2017 Adrian Popescu
+   Copyright 2011 - 2019 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 using System.Collections.Specialized;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    public static class NameValueCollectionExtensions
+    internal static class NameValueCollectionExtensions
     {
         /// <summary>
         /// Gets the parameter value.
@@ -29,11 +29,11 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="parameters">The parameters.</param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns></returns>
-        public static string GetParameterValue(this NameValueCollection parameters, string parameterName)
+        public static string GetValue(this NameValueCollection parameters, string parameterName)
         {
             if (parameters == null) return null;
             var value = parameters.Get(parameterName);
-            return string.IsNullOrEmpty(value) ? null : value;
+            return value.IsNullOrWhiteSpace() ? null : value;
         }
     }
 }

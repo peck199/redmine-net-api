@@ -1,5 +1,5 @@
 ﻿/*
-   Copyright 2011 - 2016 Adrian Popescu
+   Copyright 2011 - 2019 Adrian Popescu
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,13 +16,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    public static class CollectionExtensions
+    internal static class CollectionExtensions
     {
         /// <summary>
         /// Clones the specified list to clone.
@@ -32,15 +33,23 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static IList<T> Clone<T>(this IList<T> listToClone) where T : ICloneable
         {
-            if (listToClone == null) return null;
+            if (listToClone == null)
+            {
+                return null;
+            }
+
             IList<T> clonedList = new List<T>();
+
             foreach (T item in listToClone)
+            {
                 clonedList.Add((T)item.Clone());
+            }
+
             return clonedList;
         }
 
         /// <summary>
-        /// Equalses the specified list to compare.
+        /// Checks if lists are equals.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list">The list.</param>
@@ -50,12 +59,54 @@ namespace Redmine.Net.Api.Extensions
         {
             if (listToCompare == null) return false;
 
-            if (list.Count != listToCompare.Count) return false;
+#if NET20
+            if (list.Count != listToCompare.Count)
+            {
+                return false;
+            }
 
             var index = 0;
-            while (index < list.Count &&  (list[index] as T).Equals(listToCompare[index] as T)) index++;
+            while (index < list.Count &&  (list[index] as T).Equals(listToCompare[index] as T))
+            {
+                index++;
+            }
             
             return index == list.Count;
+#else
+            var set = new HashSet<T>(list);
+            var setToCompare = new HashSet<T>(listToCompare);
+
+            return set.SetEquals(setToCompare);
+#endif
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="collection"></param>
+        public static string Dump<TIn>(this IEnumerable<TIn> collection) where TIn: class
+        {
+            if (collection == null)
+            {
+                return null;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in collection)
+            {
+                sb.Append(",").Append(item);
+            }
+
+            sb[0] = '{';
+            sb.Append("}");
+
+            var str = sb.ToString();
+            #if NET20
+            sb = null;
+#else
+            sb.Clear();
+            #endif
+            return str;
         }
     }
 }

@@ -18,34 +18,33 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Internals;
-using Redmine.Net.Api.Logging;
-using Redmine.Net.Api.Types;
+using RedmineClient.Exceptions;
+using RedmineClient.Logging;
+using RedmineClient.Types;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// </summary>
-    public static class WebExtensions
+    internal static class WebExtensions
     {
         /// <summary>
         /// Handles the web exception.
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <param name="method">The method.</param>
-        /// <param name="mimeFormat">The MIME format.</param>
-        /// <exception cref="Redmine.Net.Api.Exceptions.RedmineTimeoutException">Timeout!</exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.NameResolutionFailureException">Bad domain name!</exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.NotFoundException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.InternalServerErrorException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.UnauthorizedException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.ForbiddenException"></exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.ConflictException">The page that you are trying to update is staled!</exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.RedmineException">
+        /// <param name="serializer">The redmine serializer.</param>
+        /// <exception cref="RedmineTimeoutException">Timeout!</exception>
+        /// <exception cref="NameResolutionFailureException">Bad domain name!</exception>
+        /// <exception cref="NotFoundException"></exception>
+        /// <exception cref="InternalServerErrorException"></exception>
+        /// <exception cref="UnauthorizedException"></exception>
+        /// <exception cref="ForbiddenException"></exception>
+        /// <exception cref="ConflictException">The page that you are trying to update is staled!</exception>
+        /// <exception cref="RedmineException">
         /// </exception>
-        /// <exception cref="Redmine.Net.Api.Exceptions.NotAcceptableException"></exception>
-        public static void HandleWebException(this WebException exception, string method, MimeFormat mimeFormat)
+        /// <exception cref="NotAcceptableException"></exception>
+        public static void HandleWebException(this WebException exception, string method, IRedmineSerializer serializer)
         {
             if (exception == null) return;
 
@@ -55,6 +54,7 @@ namespace Redmine.Net.Api.Extensions
                     throw new RedmineTimeoutException("Timeout!", exception);
                 case WebExceptionStatus.NameResolutionFailure:
                     throw new NameResolutionFailureException("Bad domain name!", exception);
+
                 case WebExceptionStatus.ProtocolError:
                 {
                     var response = (HttpWebResponse) exception.Response;
@@ -76,13 +76,16 @@ namespace Redmine.Net.Api.Extensions
                             throw new ConflictException("The page that you are trying to update is staled!", exception);
 
                         case 422:
-                            var errors = GetRedmineExceptions(exception.Response, mimeFormat);
+                            var errors = GetRedmineExceptions(exception.Response, serializer);
                             var message = string.Empty;
                             if (errors != null)
                             {
                                 foreach (var error in errors)
-                                    message = message + error.Info + "\n";
+                                {
+                                    message = message + error.Info + Environment.NewLine;
+                                }
                             }
+                            //TODO: to caller member info - to get the method name
                             throw new RedmineException(
                                 method + " has invalid or missing attribute parameters: " + message, exception);
 
@@ -101,29 +104,42 @@ namespace Redmine.Net.Api.Extensions
         /// Gets the redmine exceptions.
         /// </summary>
         /// <param name="webResponse">The web response.</param>
-        /// <param name="mimeFormat">The MIME format.</param>
+        /// <param name="serializer">The Redmine serializer.</param>
         /// <returns></returns>
-        private static List<Error> GetRedmineExceptions(this WebResponse webResponse, MimeFormat mimeFormat)
+        private static List<Error> GetRedmineExceptions(this WebResponse webResponse, IRedmineSerializer serializer)
         {
             using (var dataStream = webResponse.GetResponseStream())
             {
-                if (dataStream == null) return null;
+                if (dataStream == null)
+                {
+                    return null;
+                }
+
                 using (var reader = new StreamReader(dataStream))
                 {
                     var responseFromServer = reader.ReadToEnd();
 
-                    if (string.IsNullOrEmpty(responseFromServer.Trim())) return null;
+                    if (responseFromServer.IsNullOrWhiteSpace())
+                    {
+                        return null;
+                    }
+
                     try
                     {
-                        var result = RedmineSerializer.DeserializeList<Error>(responseFromServer, mimeFormat);
-                        return result.Objects;
+                        var result = serializer.DeserializeList<Error>(responseFromServer);
+                        return result.Items;
                     }
                     catch (Exception ex)
                     {
                         Logger.Current.Error(ex.Message);
+                        var errors = new List<Error>
+                        {
+                            new Error( "Internal error deserialization: " + ex.GetBaseException().Message)
+                        };
+
+                        return errors;
                     }
                 }
-                return null;
             }
         }
     }

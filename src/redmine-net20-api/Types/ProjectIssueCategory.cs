@@ -16,21 +16,34 @@
 
 using System.Xml.Serialization;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
-    public class ProjectIssueCategory : IdentifiableName
+    public sealed class ProjectIssueCategory : IdentifiableName
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public ProjectIssueCategory()
+        {
+        }
+
+        internal ProjectIssueCategory(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public override string ToString ()
 		{
-			return string.Format ("[ProjectIssueCategory: {0}]", base.ToString());
+			return $"[{nameof(ProjectIssueCategory)}: {base.ToString()}]";
 		}
     }
 }

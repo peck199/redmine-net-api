@@ -18,24 +18,25 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// Availability 1.3
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
-    public class IssueCategory : Identifiable<IssueCategory>, IXmlSerializable
+    public sealed class IssueCategory : Identifiable<IssueCategory>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the project.
         /// </summary>
         /// <value>
         /// The project.
         /// </value>
-        [XmlElement(RedmineKeys.PROJECT)]
         public IdentifiableName Project { get; set; }
 
         /// <summary>
@@ -44,8 +45,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The asign to.
         /// </value>
-        [XmlElement(RedmineKeys.ASSIGNED_TO)]
-        public IdentifiableName AsignTo { get; set; }
+        public IdentifiableName AssignTo { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -53,31 +53,15 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The name.
         /// </value>
-        [XmlElement(RedmineKeys.NAME)]
         public string Name { get; set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public override bool Equals(IssueCategory other)
-        {
-            if (other == null) return false;
-            return (Id == other.Id && Project == other.Project && AsignTo == other.AsignTo && Name == other.Name);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -94,7 +78,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
 
-                    case RedmineKeys.ASSIGNED_TO: AsignTo = new IdentifiableName(reader); break;
+                    case RedmineKeys.ASSIGNED_TO: AssignTo = new IdentifiableName(reader); break;
 
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
 
@@ -107,13 +91,75 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
-            writer.WriteIdIfNotNull(Project, RedmineKeys.PROJECT_ID);
+            writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            writer.WriteIdIfNotNull(AsignTo, RedmineKeys.ASSIGNED_TO_ID);
+            writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignTo);
         }
+        #endregion
 
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+
+                    case RedmineKeys.ASSIGNED_TO: AssignTo = new IdentifiableName(reader); break;
+
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using(new JsonObject(writer, RedmineKeys.ISSUE_CATEGORY))
+            {
+                writer.WriteIdIfNotNull(RedmineKeys.PROJECT_ID, Project);
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteIdIfNotNull(RedmineKeys.ASSIGNED_TO_ID, AssignTo);
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<IssueCategory>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public override bool Equals(IssueCategory other)
+        {
+            if (other == null) return false;
+            return (Id == other.Id && Project == other.Project && AssignTo == other.AssignTo && Name == other.Name);
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -125,19 +171,20 @@ namespace Redmine.Net.Api.Types
                 var hashCode = 13;
                 hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Project, hashCode);
-                hashCode = HashCodeHelper.GetHashCode(AsignTo, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(AssignTo, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
                 return hashCode;
             }
         }
-
+        #endregion
+        
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[IssueCategory: {3}, Project={0}, AsignTo={1}, Name={2}]", Project, AsignTo, Name, base.ToString());
+            return $"[{nameof(IssueCategory)}: {base.ToString()}, Project={Project}, AssignTo={AssignTo}, Name={Name}]";
         }
     }
 }

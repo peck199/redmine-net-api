@@ -16,21 +16,27 @@
 
 using System.Xml.Serialization;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.ROLE)]
-    public class CustomFieldRole : IdentifiableName
+    public sealed class CustomFieldRole : IdentifiableName
     {
+        internal CustomFieldRole(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+        
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
 		public override string ToString ()
 		{
-			return string.Format ("[CustomFieldRole: {0}]", base.ToString());
+			return $"[{nameof(CustomFieldRole)}: {base.ToString()}]";
 		}
     }
 }

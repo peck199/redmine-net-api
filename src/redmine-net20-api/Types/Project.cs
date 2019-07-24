@@ -16,60 +16,57 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// Availability 1.0
     /// </summary>
     [XmlRoot(RedmineKeys.PROJECT)]
-    public class Project : IdentifiableName, IEquatable<Project>
+    public sealed class Project : IdentifiableName, IEquatable<Project>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the identifier (Required).
         /// </summary>
         /// <value>The identifier.</value>
-        [XmlElement(RedmineKeys.IDENTIFIER)]
-        public String Identifier { get; set; }
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        [XmlElement(RedmineKeys.DESCRIPTION)]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
-        [XmlElement(RedmineKeys.PARENT)]
         public IdentifiableName Parent { get; set; }
 
         /// <summary>
         /// Gets or sets the home page.
         /// </summary>
         /// <value>The home page.</value>
-        [XmlElement(RedmineKeys.HOMEPAGE)]
-        public String HomePage { get; set; }
+        public string HomePage { get; set; }
 
         /// <summary>
         /// Gets or sets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement(RedmineKeys.CREATED_ON, IsNullable = true)]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
         /// Gets or sets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
-        [XmlElement(RedmineKeys.UPDATED_ON, IsNullable = true)]
-        public DateTime? UpdatedOn { get; set; }
+        public DateTime? UpdatedOn { get; internal set; }
 
         /// <summary>
         /// Gets or sets the status.
@@ -77,8 +74,7 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The status.
         /// </value>
-        [XmlElement(RedmineKeys.STATUS)]
-        public ProjectStatus Status { get; set; }
+        public ProjectStatus Status { get; internal set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this project is public.
@@ -87,7 +83,6 @@ namespace Redmine.Net.Api.Types
         ///   <c>true</c> if this project is public; otherwise, <c>false</c>.
         /// </value>
         /// <remarks> is exposed since 2.6.0</remarks>
-        [XmlElement(RedmineKeys.IS_PUBLIC)]
         public bool IsPublic { get; set; }
 
         /// <summary>
@@ -96,38 +91,15 @@ namespace Redmine.Net.Api.Types
         /// <value>
         ///   <c>true</c> if [inherit members]; otherwise, <c>false</c>.
         /// </value>
-        [XmlElement(RedmineKeys.INHERIT_MEMBERS)]
         public bool InheritMembers { get; set; }
 
         /// <summary>
-        /// Gets or sets the trackers.
+        /// since 2.6.0 Gets or sets the trackers.
         /// </summary>
         /// <value>
         /// The trackers.
         /// </value>
-        [XmlArray(RedmineKeys.TRACKERS)]
-        [XmlArrayItem(RedmineKeys.TRACKER)]
         public IList<ProjectTracker> Trackers { get; set; }
-
-        /// <summary>
-        /// Gets or sets the custom fields.
-        /// </summary>
-        /// <value>
-        /// The custom fields.
-        /// </value>
-        [XmlArray(RedmineKeys.CUSTOM_FIELDS)]
-        [XmlArrayItem(RedmineKeys.CUSTOM_FIELD)]
-        public IList<IssueCustomField> CustomFields { get; set; }
-
-        /// <summary>
-        /// Gets or sets the issue categories.
-        /// </summary>
-        /// <value>
-        /// The issue categories.
-        /// </value>
-        [XmlArray(RedmineKeys.ISSUE_CATEGORIES)]
-        [XmlArrayItem(RedmineKeys.ISSUE_CATEGORY)]
-        public IList<ProjectIssueCategory> IssueCategories { get; set; }
 
         /// <summary>
         /// since 2.6.0
@@ -135,17 +107,31 @@ namespace Redmine.Net.Api.Types
         /// <value>
         /// The enabled modules.
         /// </value>
-        [XmlArray(RedmineKeys.ENABLED_MODULES)]
-        [XmlArrayItem(RedmineKeys.ENABLED_MODULE)]
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the custom fields.
         /// </summary>
-        [XmlArray(RedmineKeys.TIME_ENTRY_ACTIVITIES)]
-        [XmlArrayItem(RedmineKeys.TIME_ENTRY_ACTIVITY)]
-        public IList<TimeEntryActivity> TimeEntryActivities { get; set; }
+        /// <value>
+        /// The custom fields.
+        /// </value>
+        public IList<IssueCustomField> CustomFields { get; internal set; }
 
+        /// <summary>
+        /// since 2.6.0 Gets or sets the issue categories.
+        /// </summary>
+        /// <value>
+        /// The issue categories.
+        /// </value>
+        public IList<ProjectIssueCategory> IssueCategories { get; internal set; }
+
+        /// <summary>
+        /// since 3.4.0
+        /// </summary>
+        public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; internal set; }
+        #endregion
+
+        #region Implementation of IXmlSerializer
         /// <summary>
         /// Generates an object from its XML representation.
         /// </summary>
@@ -193,7 +179,7 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
 
-                    case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadElementContentAsCollection<TimeEntryActivity>(); break;
+                    case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadElementContentAsCollection<ProjectTimeEntryActivity>(); break;
 
                     default: reader.Read(); break;
                 }
@@ -207,32 +193,112 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteElementString(RedmineKeys.IDENTIFIER, Identifier);
-            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteElementString(RedmineKeys.INHERIT_MEMBERS, InheritMembers.ToString().ToLowerInvariant());
-            writer.WriteElementString(RedmineKeys.IS_PUBLIC, IsPublic.ToString().ToLowerInvariant());
-            writer.WriteIdOrEmpty(Parent, RedmineKeys.PARENT_ID);
-            writer.WriteElementString(RedmineKeys.HOMEPAGE, HomePage);
+            writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteIfNotDefaultOrNull(RedmineKeys.INHERIT_MEMBERS, InheritMembers.ToString().ToLowerInvariant());
+            writer.WriteIfNotDefaultOrNull(RedmineKeys.IS_PUBLIC, IsPublic.ToString().ToLowerInvariant());
+            writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
+            writer.WriteIdIfNotNull(RedmineKeys.PARENT_ID, Parent);
+            writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
+            writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
 
-            var trackers = new List<IValue>();
-            foreach (var tracker in Trackers)
+            if (Id == 0)
             {
-                trackers.Add(tracker as IValue);
-
-            }
-            var enabledModules = new List<IValue>();
-            foreach (var enabledModule in EnabledModules)
-            {
-                enabledModules.Add(enabledModule as IValue);
+                writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
+                return;
             }
 
-            writer.WriteListElements(trackers, RedmineKeys.TRACKER_IDS);
-            writer.WriteListElements(enabledModules, RedmineKeys.ENABLED_MODULE_NAMES);
+            writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+        }
+        #endregion
 
-            if (Id == 0) return;
-
-            writer.WriteArray(CustomFields, RedmineKeys.CUSTOM_FIELDS);
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.PROJECT))
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteProperty(RedmineKeys.IDENTIFIER, Identifier);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.IS_PUBLIC, IsPublic);
+                writer.WriteIfNotNull(RedmineKeys.PARENT_ID, Parent);
+                writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
+                writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
+             
+                if (Id == 0)
+                {
+                    writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
+                    return;
+                }
+                
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.IDENTIFIER: Identifier = reader.ReadAsString(); break;
+
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+
+                    case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadAsInt(); break;
+
+                    case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
+
+                    case RedmineKeys.HOMEPAGE: HomePage = reader.ReadAsString(); break;
+
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsNullableDateTime(); break;
+
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsNullableDateTime(); break;
+
+                    case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
+
+                    case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadAsCollection<ProjectEnabledModule>(); break;
+
+                    case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadAsCollection<ProjectIssueCategory>(); break;
+
+                    case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadAsCollection<ProjectTimeEntryActivity>(); break;
+
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<ProjectTracker>(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<Project>
         /// <summary>
         /// 
         /// </summary>
@@ -240,13 +306,17 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(Project other)
         {
-            if (other == null) return false;
+            if (other == null)
+            {
+                return false;
+            }
+
             return (
                 Id == other.Id
                 && Identifier.Equals(other.Identifier)
                 && Description.Equals(other.Description)
                 && (Parent != null ? Parent.Equals(other.Parent) : other.Parent == null)
-				&& (HomePage != null ? HomePage.Equals(other.HomePage) : other.HomePage == null)
+                && (HomePage != null ? HomePage.Equals(other.HomePage) : other.HomePage == null)
                 && CreatedOn == other.CreatedOn
                 && UpdatedOn == other.UpdatedOn
                 && Status == other.Status
@@ -256,6 +326,7 @@ namespace Redmine.Net.Api.Types
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
                 && (IssueCategories != null ? IssueCategories.Equals<ProjectIssueCategory>(other.IssueCategories) : other.IssueCategories == null)
                 && (EnabledModules != null ? EnabledModules.Equals<ProjectEnabledModule>(other.EnabledModules) : other.EnabledModules == null)
+                && (TimeEntryActivities != null ? TimeEntryActivities.Equals<ProjectTimeEntryActivity>(other.TimeEntryActivities) : other.TimeEntryActivities == null)
             );
         }
 
@@ -265,26 +336,28 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override int GetHashCode()
         {
-	        unchecked
-	        {
-		        var hashCode = base.GetHashCode();
-		        hashCode = HashCodeHelper.GetHashCode(Identifier, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(Parent, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(HomePage, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(IsPublic, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
-		        hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
+            unchecked
+            {
+                var hashCode = base.GetHashCode();
+                hashCode = HashCodeHelper.GetHashCode(Identifier, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Parent, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(HomePage, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(UpdatedOn, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsPublic, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(InheritMembers, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IssueCategories, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(EnabledModules, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(TimeEntryActivities, hashCode);
 
-		        return hashCode;
-	        }
+                return hashCode;
+            }
         }
+        #endregion
 
         /// <summary>
         /// 
@@ -292,8 +365,18 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Project: {13}, Identifier={0}, Description={1}, Parent={2}, HomePage={3}, CreatedOn={4}, UpdatedOn={5}, Status={6}, IsPublic={7}, InheritMembers={8}, Trackers={9}, CustomFields={10}, IssueCategories={11}, EnabledModules={12}]",
-                Identifier, Description, Parent, HomePage, CreatedOn, UpdatedOn, Status, IsPublic, InheritMembers, Trackers, CustomFields, IssueCategories, EnabledModules, base.ToString());
+            return
+                $@"[Project: {base.ToString()}, Identifier={Identifier}, Description={Description}, Parent={Parent}, HomePage={HomePage}, 
+CreatedOn={CreatedOn?.ToString("u")}, 
+UpdatedOn={UpdatedOn?.ToString("u")}, 
+Status={Status.ToString("G")}, 
+IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, 
+InheritMembers={InheritMembers.ToString(CultureInfo.InvariantCulture)}, 
+Trackers={Trackers.Dump()}, 
+CustomFields={CustomFields.Dump()}, 
+IssueCategories={IssueCategories.Dump()}, 
+EnabledModules={EnabledModules.Dump()}, 
+TimeEntryActivities = {TimeEntryActivities.Dump()}]";
         }
     }
 }

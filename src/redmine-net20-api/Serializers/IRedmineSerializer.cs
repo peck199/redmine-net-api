@@ -14,48 +14,48 @@
    limitations under the License.
 */
 
-namespace RedmineClient.Types
+namespace RedmineClient
 {
     /// <summary>
     /// 
     /// </summary>
-    public enum IssueRelationType
+    public interface IRedmineSerializer
     {
         /// <summary>
         /// 
         /// </summary>
-        Relates = 1,
+        /// <param name="response"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        int Count<T>(string response) where T : new();
+
         /// <summary>
         /// 
         /// </summary>
-        Duplicates,
+        /// <param name="obj"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        string Serialize<T>(T obj) where T : class;
+
         /// <summary>
         /// 
         /// </summary>
-        Duplicated,
+        /// <param name="response"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        T Deserialize<T>(string response) where T : new();
+
         /// <summary>
         /// 
         /// </summary>
-        Blocks,
+        /// <param name="response"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        PaginatedResult<T> DeserializeList<T>(string response) where T : class;
+
         /// <summary>
         /// 
         /// </summary>
-        Blocked,
-        /// <summary>
-        /// 
-        /// </summary>
-        Precedes,
-        /// <summary>
-        /// 
-        /// </summary>
-        Follows,
-        /// <summary>
-        /// 
-        /// </summary>
-        copied_to,
-        /// <summary>
-        /// 
-        /// </summary>
-        copied_from
+        RedmineSerializerType Type { get; }
     }
 }

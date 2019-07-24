@@ -14,9 +14,10 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Generic;
 
-namespace Redmine.Net.Api.Internals
+namespace RedmineClient.Internals
 {
     /// <summary>
     /// 
@@ -32,18 +33,23 @@ namespace Redmine.Net.Api.Internals
         /// <returns>
         /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        public static int GetHashCode<T>(IList<T> list, int hash)
+        public static int GetHashCode<T>(IList<T> list, int hash) where T: class
         {
             unchecked
             {
                 var hashCode = hash;
-                if (list != null)
+                if (list == null)
                 {
-                    hashCode = (hashCode * 13) + list.Count;
-                    foreach (T t in list)
+                    return hashCode;
+                }
+                
+                hashCode = (hashCode * 13) + list.Count;
+                foreach (var t in list)
+                {
+                    hashCode *= 13;
+                    if (t != null)
                     {
-                        hashCode *= 13;
-                        if (t != null) hashCode = hashCode + t.GetHashCode();
+                        hashCode += t.GetHashCode();
                     }
                 }
 
@@ -60,13 +66,32 @@ namespace Redmine.Net.Api.Internals
         /// <returns>
         /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        public static int GetHashCode<T>(T entity, int hash)
+        public static int GetHashCode<T>(T entity, int hash) 
         {
             unchecked
             {
                 var hashCode = hash;
 
-                hashCode = (hashCode * 397) ^ (entity == null ? 0 : entity.GetHashCode());
+                var type = typeof(T);
+
+               var isNullable = Nullable.GetUnderlyingType(type) != null;
+                if (isNullable)
+                {
+                   type= type.UnderlyingSystemType;
+                }
+
+                if (type.IsByRef)
+                {
+                    hashCode = (hashCode * 397) ^ (entity?.GetHashCode() ?? 0);
+                }
+                else
+                {
+                    if (type.IsValueType)
+                    {
+                        hashCode = (hashCode * 397) ^ entity.GetHashCode();
+                    }
+                }
+                
 
                 return hashCode;
             }

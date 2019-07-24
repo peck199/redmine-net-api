@@ -14,48 +14,34 @@
    limitations under the License.
 */
 
+using System.Xml.Serialization;
+
 namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public enum IssueRelationType
+    [XmlRoot(RedmineKeys.TIME_ENTRY_ACTIVITY)]
+    public sealed class ProjectTimeEntryActivity : IdentifiableName
     {
         /// <summary>
         /// 
         /// </summary>
-        Relates = 1,
+        public ProjectTimeEntryActivity(){}
+
+        internal ProjectTimeEntryActivity(int id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
         /// <summary>
         /// 
         /// </summary>
-        Duplicates,
-        /// <summary>
-        /// 
-        /// </summary>
-        Duplicated,
-        /// <summary>
-        /// 
-        /// </summary>
-        Blocks,
-        /// <summary>
-        /// 
-        /// </summary>
-        Blocked,
-        /// <summary>
-        /// 
-        /// </summary>
-        Precedes,
-        /// <summary>
-        /// 
-        /// </summary>
-        Follows,
-        /// <summary>
-        /// 
-        /// </summary>
-        copied_to,
-        /// <summary>
-        /// 
-        /// </summary>
-        copied_from
+        /// <returns></returns>
+        public override string ToString ()
+        {
+            return $"[{nameof(ProjectTimeEntryActivity)}: {base.ToString()}]";
+        }
     }
 }

@@ -55,6 +55,9 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net20\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -62,8 +65,11 @@
   <ItemGroup>
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\ExtensionAttribute.cs" />
+    <Compile Include="Extensions\JsonReaderExtensions.cs" />
+    <Compile Include="Extensions\JsonWriterExtensions.cs" />
     <Compile Include="Extensions\LoggerExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="Extensions\XmlReaderExtensions.cs" />
     <Compile Include="Extensions\XmlWriterExtensions.cs" />
@@ -79,6 +85,13 @@
     <Compile Include="Logging\LoggingEventType.cs" />
     <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="MimeFormat.cs" />
+    <Compile Include="Serializers\IJsonSerializable.cs" />
+    <Compile Include="Serializers\IRedmineSerializer.cs" />
+    <Compile Include="Serializers\JsonObject.cs" />
+    <Compile Include="Serializers\RedmineJsonSerializer.cs" />
+    <Compile Include="Serializers\RedmineSerializerFactory.cs" />
+    <Compile Include="Serializers\RedmineSerializerType.cs" />
+    <Compile Include="Serializers\RedmineXmlSerializer.cs" />
     <Compile Include="Types\Attachments.cs" />
     <Compile Include="Types\File.cs" />
     <Compile Include="Types\PaginatedObjects.cs" />
@@ -158,6 +171,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <ItemGroup />
 </Project>

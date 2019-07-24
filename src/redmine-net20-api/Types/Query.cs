@@ -15,33 +15,36 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// Availability 1.3
     /// </summary>
     [XmlRoot(RedmineKeys.QUERY)]
-    public class Query : IdentifiableName, IEquatable<Query>
+    public sealed class Query : IdentifiableName, IEquatable<Query>
     {
+        #region Properties
         /// <summary>
-        /// Gets or sets a value indicating whether this instance is public.
+        /// Gets a value indicating whether this instance is public.
         /// </summary>
         /// <value><c>true</c> if this instance is public; otherwise, <c>false</c>.</value>
-        [XmlElement(RedmineKeys.IS_PUBLIC)]
-        public bool IsPublic { get; set; }
+        public bool IsPublic { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the project id.
+        /// Gets  the project id.
         /// </summary>
         /// <value>The project id.</value>
-        [XmlElement(RedmineKeys.PROJECT_ID)]
-        public int? ProjectId { get; set; }
+        public int? ProjectId { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
@@ -71,13 +74,45 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+        #endregion
+
+        #region Implementation of IJsonSerialization
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteXml(XmlWriter writer) { }
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadAsInt32(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<Query>
         /// <summary>
         /// 
         /// </summary>
@@ -106,14 +141,15 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
-
+        #endregion
+        
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Query: {2}, IsPublic={0}, ProjectId={1}]", IsPublic, ProjectId, base.ToString());
+            return $"[{nameof(Query)}: {base.ToString()}, IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, ProjectId={ProjectId?.ToString(CultureInfo.InvariantCulture)}]";
         }
     }
 }

@@ -14,33 +14,56 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System;
 using System.Xml.Serialization;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
-    /// the module name: boards, calendar, documents, files, gantt, issue_tracking, news, repository, time_tracking, wiki.
+    /// the module name: boards, calendar, documents, files, gant, issue_tracking, news, repository, time_tracking, wiki.
     /// </summary>
     [XmlRoot(RedmineKeys.ENABLED_MODULE)]
- public class ProjectEnabledModule : IdentifiableName, IValue
+    public sealed class ProjectEnabledModule : IdentifiableName, IValue
     {
-        #region IValue implementation
+        #region Ctors
         /// <summary>
         /// 
         /// </summary>
-        public string Value
+        public ProjectEnabledModule(){}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="moduleName"></param>
+        public ProjectEnabledModule(string moduleName)
         {
-            get { return Name; }
+            if (moduleName.IsNullOrWhiteSpace())
+            {
+                throw new ArgumentException(nameof(moduleName));
+            }
+
+            Name = moduleName;
         }
 
         #endregion
+
+        #region Implementation of IValue
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value => Name;
+
+        #endregion
+       
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[ProjectEnabledModule: {0}]", base.ToString());
+            return $"[{nameof(ProjectEnabledModule)}: {base.ToString()}]";
         }
     }
 }

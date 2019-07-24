@@ -17,16 +17,16 @@
 using System;
 using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Internals;
+using RedmineClient.Extensions;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
-    public class IdentifiableName : Identifiable<IdentifiableName>, IXmlSerializable
+    public class IdentifiableName : Identifiable<IdentifiableName>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
@@ -44,29 +44,39 @@ namespace Redmine.Net.Api.Types
             Initialize(reader);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public IdentifiableName(JsonReader reader)
+        {
+            InitializeJsonReader(reader);
+        }
+
         private void Initialize(XmlReader reader)
         {
             ReadXml(reader);
         }
 
+        private void InitializeJsonReader(JsonReader reader)
+        {
+            ReadJson(reader);
+        }
+
+        #region Properties
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
-        /// <value>The name.</value>
-        [XmlAttribute(RedmineKeys.NAME)]
-        public String Name { get; set; }
+        public string Name { get; internal set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
+        #region Implementation of IXmlSerializable
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public virtual void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
             Name = reader.GetAttribute(RedmineKeys.NAME);
@@ -77,20 +87,56 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public virtual void WriteXml(XmlWriter writer)
+        public override void WriteXml(XmlWriter writer)
         {
             writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
             writer.WriteAttributeString(RedmineKeys.NAME, Name);
         }
+
+        #endregion
+
+        #region Implementation of IJsonSerializable
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
         {
-            return string.Format("[IdentifiableName: Id={0}, Name={1}]", Id, Name);
+            writer.WriteIdIfNotNull(RedmineKeys.ID, this);
+            if (!Name.IsNullOrWhiteSpace())
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+            }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType == JsonToken.PropertyName)
+                {
+                    switch (reader.Value)
+                    {
+                        case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+                        case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                        default: reader.Read(); break;
+                    }
+                }
+            }
+
+        }
+        #endregion
+
+        #region Implementation of IEquatable<IdentifiableName>
         /// <summary>
         /// 
         /// </summary>
@@ -114,6 +160,16 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
                 return hashCode;
             }
+        }
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"[{nameof(IdentifiableName)}: {base.ToString()}, Name={Name}]";
         }
     }
 }
