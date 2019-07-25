@@ -63,32 +63,9 @@
     <Compile Include="Infrastructure\OrderAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\RedmineTest.cs" />
-    <Compile Include="Tests\Sync\UserTests.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="RedmineFixture.cs" />
     <Compile Include="Infrastructure\RedmineCollection.cs" />
-    <Compile Include="Tests\Sync\TrackerTests.cs" />
-    <Compile Include="Tests\Sync\WikiPageTests.cs" />
-    <Compile Include="Tests\Sync\VersionTests.cs" />
-    <Compile Include="Tests\Sync\TimeEntryTests.cs" />
-    <Compile Include="Tests\Sync\RoleTests.cs" />
-    <Compile Include="Tests\Sync\QueryTests.cs" />
-    <Compile Include="Tests\Sync\ProjectTests.cs" />
-    <Compile Include="Tests\Sync\ProjectMembershipTests.cs" />
-    <Compile Include="Tests\Sync\NewsTests.cs" />
-    <Compile Include="Tests\Sync\IssueStatusTests.cs" />
-    <Compile Include="Tests\Sync\IssueRelationTests.cs" />
-    <Compile Include="Tests\Sync\IssuePriorityTests.cs" />
-    <Compile Include="Tests\Sync\TimeEntryActivtiyTests.cs" />
-    <Compile Include="Tests\Sync\IssueCategoryTests.cs" />
-    <Compile Include="Tests\Sync\GroupTests.cs" />
-    <Compile Include="Tests\Sync\CustomFieldTests.cs" />
-    <Compile Include="Tests\Sync\AttachmentTests.cs" />
-    <Compile Include="Tests\Sync\IssueTests.cs" />
-    <Compile Include="Tests\Async\AttachmentAsyncTests.cs" />
-    <Compile Include="Tests\Async\IssueAsyncTests.cs" />
-    <Compile Include="Tests\Async\UserAsyncTests.cs" />
-    <Compile Include="Tests\Async\WikiPageAsyncTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
