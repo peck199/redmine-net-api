@@ -14,11 +14,7 @@ namespace redmine.net.api.Tests
 
 		static Helper()
 		{
-			Uri = ConfigurationManager.AppSettings["uri"];
-			ApiKey = ConfigurationManager.AppSettings["apiKey"];
-
-			Username = ConfigurationManager.AppSettings["username"];
-			Password = ConfigurationManager.AppSettings["password"];
+			
 		}
 	}
 }

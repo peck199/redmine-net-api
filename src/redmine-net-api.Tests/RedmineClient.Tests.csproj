@@ -1,100 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" />
-  <Import Project="..\packages\xunit.runner.console.2.3.1\build\xunit.runner.console.props" Condition="Exists('..\packages\xunit.runner.console.2.3.1\build\xunit.runner.console.props')" />
-  <Import Project="..\packages\xunit.core.2.3.1\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.3.1\build\xunit.core.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{900EF0B3-0233-45DA-811F-4C59483E8452}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>redmine.net.api.Tests</RootNamespace>
-    <AssemblyName>redmine-net-api.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;JSON;XML</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
-    <StartAction>Program</StartAction>
-    <ConsolePause>false</ConsolePause>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup Label="Build">
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetFramework>net45</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>RedmineClient.Tests</RootNamespace>
+    <AssemblyName>RedmineClient.Tests</AssemblyName>
+    <Configurations>Debug;Release;DebugXml;DebugJson</Configurations>
+    <!--<DefineConstants>$(DefineConstants);XML;JSON</DefineConstants>
+    <Platform>x64 or x86</Platform>-->
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.XML" />
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.3.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.3.1\lib\netstandard1.1\xunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.3.1\lib\net452\xunit.execution.desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.runner.utility.net452, Version=2.3.1.3858, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.runner.utility.2.3.1\lib\net452\xunit.runner.utility.net452.dll</HintPath>
-    </Reference>
+    <Compile Remove="Tests\Async\**" />
+    <Compile Remove="Tests\Sync\**" />
+    <EmbeddedResource Remove="Tests\Async\**" />
+    <EmbeddedResource Remove="Tests\Sync\**" />
+    <None Remove="Tests\Async\**" />
+    <None Remove="Tests\Sync\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\CaseOrder.cs" />
-    <Compile Include="Infrastructure\CollectionOrderer.cs" />
-    <Compile Include="Infrastructure\OrderAttribute.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\RedmineTest.cs" />
-    <Compile Include="Helper.cs" />
-    <Compile Include="RedmineFixture.cs" />
-    <Compile Include="Infrastructure\RedmineCollection.cs" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="Tests\RedmineTest.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup Label="Package References">
+    <PackageReference Include="xunit" Version="2.4.1" />
+  </ItemGroup>
+
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\redmine-net20-api\RedmineClient.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="packages.config" />
+    <Folder Include="Properties\" />
+    <Folder Include="Tests\" />
   </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\xunit.analyzers.0.8.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\redmine-net20-api\RedmineClient.csproj">
-      <Project>{0e6b9b72-445d-4e71-8d29-48c4a009ab03}</Project>
-      <Name>RedmineClient</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tests\Async\" />
-    <Folder Include="Tests\Sync\" />
-  </ItemGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.core.2.3.1\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.3.1\build\xunit.core.props'))" />
-    <Error Condition="!Exists('..\packages\xunit.core.2.3.1\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.3.1\build\xunit.core.targets'))" />
-    <Error Condition="!Exists('..\packages\xunit.runner.console.2.3.1\build\xunit.runner.console.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.console.2.3.1\build\xunit.runner.console.props'))" />
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.3.1\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
-  <Import Project="..\packages\xunit.core.2.3.1\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.3.1\build\xunit.core.targets')" />
+
 </Project>

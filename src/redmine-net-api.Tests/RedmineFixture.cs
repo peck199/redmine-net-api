@@ -16,13 +16,13 @@ namespace redmine.net.api.Tests
 		[Conditional("JSON")]
 		private void SetMimeTypeJSON()
 		{
-			RedmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey, MimeFormat.Json);
+			
 		}
 
 		[Conditional("XML")]
 		private void SetMimeTypeXML()
 		{
-			RedmineManager = new RedmineManager(Helper.Uri, Helper.ApiKey);
+			
 		}
 	}
 }
