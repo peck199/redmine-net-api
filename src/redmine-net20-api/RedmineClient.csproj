@@ -75,6 +75,10 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup Label="Package References">
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
