@@ -14,6 +14,8 @@
    limitations under the License.
 */
 
+using System.Collections.Generic;
+
 namespace RedmineClient.Internals.Serialization
 {
     internal interface IRedmineSerializer
@@ -22,8 +24,8 @@ namespace RedmineClient.Internals.Serialization
 
         T Deserialize<T>(string response) where T : new();
 
-        //PaginatedResult<T> DeserializeList<T>(string response) where T : class, new();
+        PagedResults<T> DeserializeToPagedResults<T>(string response) where T : class, new();
 
-        int Count<T>(string response) where T : new();
+        int Count<T>(string response) where T : class, new();
     }
 }
