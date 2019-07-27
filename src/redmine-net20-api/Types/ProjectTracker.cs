@@ -14,14 +14,15 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Xml.Serialization;
-using RedmineClient.Internals;
 
 namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TRACKER)]
     public sealed class ProjectTracker : IdentifiableName, IValue
     {
@@ -63,9 +64,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(ProjectTracker)}: {base.ToString()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(ProjectTracker)}: {ToString()}]";
+        
     }
 }

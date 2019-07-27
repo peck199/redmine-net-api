@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
     public sealed class IssueCustomField : IdentifiableName, IEquatable<IssueCustomField>, ICloneable, IValue
     {
@@ -258,14 +260,12 @@ namespace RedmineClient.Types
         {
             return ((CustomFieldValue)item).Info;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(IssueCustomField)}: {base.ToString()} Values={Values.Dump()}, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(IssueCustomField)}: {ToString()} Values={Values.Dump()}, Multiple={Multiple.ToString(CultureInfo.InvariantCulture)}]";
+        
     }
 }

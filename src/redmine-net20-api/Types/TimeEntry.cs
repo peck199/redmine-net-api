@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY)]
     public sealed class TimeEntry : Identifiable<TimeEntry>, ICloneable
     {
@@ -277,10 +279,8 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $@"[{nameof(TimeEntry)}: {base.ToString()}, Issue={Issue}, Project={Project}, 
+        private string DebuggerDisplay =>
+                $@"[{nameof(TimeEntry)}: {ToString()}, Issue={Issue}, Project={Project}, 
 SpentOn={SpentOn?.ToString("u")}, 
 Hours={Hours.ToString("F")}, 
 Activity={Activity}, 
@@ -289,6 +289,6 @@ Comments={Comments},
 CreatedOn={CreatedOn?.ToString("u")}, 
 UpdatedOn={UpdatedOn?.ToString("u")}, 
 CustomFields={CustomFields.Dump()}]";
-        }
+        
     }
 }

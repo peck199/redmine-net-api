@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ATTACHMENT)]
     public sealed class Attachment : Identifiable<Attachment>
     {
@@ -164,9 +166,9 @@ namespace RedmineClient.Types
         /// </summary>
         /// <param name="writer"></param>
 
-        public override void WriteJson(JsonWriter writer) 
+        public override void WriteJson(JsonWriter writer)
         {
-            using(new JsonObject(writer, RedmineKeys.ATTACHMENT))
+            using (new JsonObject(writer, RedmineKeys.ATTACHMENT))
             {
                 writer.WriteProperty(RedmineKeys.FILENAME, FileName);
                 writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
@@ -221,11 +223,9 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $@"[{nameof(Attachment)}: 
-{base.ToString()}, 
+        private string DebuggerDisplay =>
+        $@"[{nameof(Attachment)}: 
+{ToString()}, 
 FileName={FileName}, 
 FileSize={FileSize.ToString(CultureInfo.InvariantCulture)}, 
 ContentType={ContentType}, 
@@ -233,6 +233,6 @@ Description={Description},
 ContentUrl={ContentUrl}, 
 Author={Author}, 
 CreatedOn={CreatedOn?.ToString("u")}]";
-        }
+
     }
 }

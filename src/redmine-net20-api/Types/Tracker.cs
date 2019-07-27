@@ -15,7 +15,7 @@
 */
 
 using System;
-using System.Globalization;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -27,6 +27,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TRACKER)]
     public class Tracker : IdentifiableName, IEquatable<Tracker>
     {
@@ -134,9 +135,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Tracker)}: {base.ToString()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Tracker)}: {base.ToString()}]";
+        
     }
 }

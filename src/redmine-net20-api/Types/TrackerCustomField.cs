@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -24,6 +25,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TRACKER)]
     public sealed class TrackerCustomField : Tracker
     {
@@ -68,15 +70,13 @@ namespace RedmineClient.Types
                 }
             }
         }
-        #endregion 
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return $"[{nameof(TrackerCustomField)}: {base.ToString()}]";
-		}
+        private string DebuggerDisplay => $"[{nameof(TrackerCustomField)}: {ToString()}]";
+		
     }
 }

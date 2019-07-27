@@ -15,9 +15,9 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using RedmineClient.Extensions;
@@ -28,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.RELATION)]
     public sealed class IssueRelation : Identifiable<IssueRelation>
     {
@@ -212,13 +213,11 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $@"[{nameof(IssueRelation)}: {base.ToString()}, 
+        private string DebuggerDisplay => $@"[{nameof(IssueRelation)}: {ToString()}, 
 IssueId={IssueId.ToString(CultureInfo.InvariantCulture)}, 
 IssueToId={IssueToId.ToString(CultureInfo.InvariantCulture)}, 
 Type={Type.ToString("G")},
 Delay={Delay?.ToString(CultureInfo.InvariantCulture)}]";
-        }
+        
     }
 }

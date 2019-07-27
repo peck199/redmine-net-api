@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
@@ -29,7 +30,8 @@ namespace RedmineClient.Types
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-	public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
+    public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
     {
         #region Properties
         /// <summary>
@@ -152,9 +154,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"Id={Id.ToString(CultureInfo.InvariantCulture)}";
-        }
+        private string DebuggerDisplay => $"Id={Id.ToString(CultureInfo.InvariantCulture)}";
+        
     }
 }

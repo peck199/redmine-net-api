@@ -15,14 +15,15 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml.Serialization;
-using RedmineClient.Internals;
 
 namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.USER)]
     public sealed class Watcher : IdentifiableName, IValue, ICloneable
     {
@@ -50,9 +51,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Watcher)}: {base.ToString()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Watcher)}: {ToString()}]";
+        
     }
 }

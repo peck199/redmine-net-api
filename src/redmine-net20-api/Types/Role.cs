@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.4
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ROLE)]
     public sealed class Role : IdentifiableName, IEquatable<Role>
     {
@@ -144,9 +146,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Role)}: {base.ToString()}, Permissions={Permissions}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Role)}: {ToString()}, Permissions={Permissions}]";
+        
     }
 }

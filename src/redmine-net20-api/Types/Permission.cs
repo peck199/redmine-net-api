@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.PERMISSION)]
     public sealed class Permission : IXmlSerializable, IJsonSerializable, IEquatable<Permission>
     {
@@ -153,9 +155,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Permission)}: {Info}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Permission)}: {Info}]";
+        
     }
 }

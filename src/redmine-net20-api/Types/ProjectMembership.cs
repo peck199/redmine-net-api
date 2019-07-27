@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -33,6 +33,7 @@ namespace RedmineClient.Types
     /// PUT - Updates the membership of given :id. Only the roles can be updated, the project and the user of a membership are read-only.
     /// DELETE - Deletes a memberships. Memberships inherited from a group membership can not be deleted. You must delete the group membership.
     /// </remarks>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.MEMBERSHIP)]
     public sealed class ProjectMembership : Identifiable<ProjectMembership>
     {
@@ -188,9 +189,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(ProjectMembership)}: {base.ToString()}, Project={Project}, User={User}, Group={Group}, Roles={Roles.Dump()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(ProjectMembership)}: {ToString()}, Project={Project}, User={User}, Group={Group}, Roles={Roles.Dump()}]";
+        
     }
 }

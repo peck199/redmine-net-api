@@ -16,7 +16,6 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using RedmineClient.Internals;
 using RedmineClient.Internals.Serialization;
 
 namespace RedmineClient.Types

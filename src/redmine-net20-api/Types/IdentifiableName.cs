@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using Newtonsoft.Json;
@@ -26,14 +26,13 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class IdentifiableName : Identifiable<IdentifiableName>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
         /// </summary>
-        public IdentifiableName()
-        {
-        }
+        public IdentifiableName(){}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
@@ -166,9 +165,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(IdentifiableName)}: {base.ToString()}, Name={Name}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(IdentifiableName)}: {base.ToString()}, Name={Name}]";
+        
     }
 }

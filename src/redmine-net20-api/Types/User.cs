@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.USER)]
     public sealed class User : Identifiable<User>
     {
@@ -304,15 +306,13 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-     
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $@"[{nameof(User)}: {Groups}, Login={Login}, Password={Password}, FirstName={FirstName}, LastName={LastName}, Email={Email}, 
+        private string DebuggerDisplay =>
+               $@"[{nameof(User)}: {Groups}, Login={Login}, Password={Password}, FirstName={FirstName}, LastName={LastName}, Email={Email}, 
 EmailNotification={MailNotification}, 
 AuthenticationModeId={AuthenticationModeId?.ToString(CultureInfo.InvariantCulture)}, 
 CreatedOn={CreatedOn?.ToString("u")}, 
@@ -323,6 +323,6 @@ MustChangePassword={MustChangePassword.ToString(CultureInfo.InvariantCulture)},
 CustomFields={CustomFields.Dump()}, 
 Memberships={Memberships.Dump()}, 
 Groups={Groups.Dump()}]";
-        }
+        
     }
 }

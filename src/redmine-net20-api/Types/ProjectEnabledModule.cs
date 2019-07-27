@@ -15,15 +15,16 @@ limitations under the License.
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml.Serialization;
 using RedmineClient.Extensions;
-using RedmineClient.Internals;
 
 namespace RedmineClient.Types
 {
     /// <summary>
     /// the module name: boards, calendar, documents, files, gant, issue_tracking, news, repository, time_tracking, wiki.
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ENABLED_MODULE)]
     public sealed class ProjectEnabledModule : IdentifiableName, IValue
     {
@@ -56,14 +57,12 @@ namespace RedmineClient.Types
         public string Value => Name;
 
         #endregion
-       
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(ProjectEnabledModule)}: {base.ToString()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(ProjectEnabledModule)}: {ToString()}]";
+        
     }
 }

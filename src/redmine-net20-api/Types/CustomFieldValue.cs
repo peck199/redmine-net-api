@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.VALUE)]
     public class CustomFieldValue : IXmlSerializable, IJsonSerializable, IEquatable<CustomFieldValue>, ICloneable 
     {
@@ -169,14 +171,12 @@ namespace RedmineClient.Types
             return customFieldValue;
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(CustomFieldValue)}: {Info}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(CustomFieldValue)}: {Info}]";
+        
     }
 }

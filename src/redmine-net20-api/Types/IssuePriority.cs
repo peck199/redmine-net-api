@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE_PRIORITY)]
     public sealed class IssuePriority : IdentifiableName, IEquatable<IssuePriority>
     {
@@ -143,9 +145,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[IssuePriority: {base.ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}]";
-        }
+        private string DebuggerDisplay => $"[IssuePriority: {ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}]";
+        
     }
 }

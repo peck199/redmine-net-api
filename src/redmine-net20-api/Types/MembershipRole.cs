@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ROLE)]
     public sealed class MembershipRole : IdentifiableName, IEquatable<MembershipRole>, IValue
     {
@@ -156,9 +158,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[MembershipRole: {base.ToString()}, Inherited={Inherited.ToString(CultureInfo.InvariantCulture)}]";
-        }
+        private string DebuggerDisplay => $"[MembershipRole: {ToString()}, Inherited={Inherited.ToString(CultureInfo.InvariantCulture)}]";
+        
     }
 }

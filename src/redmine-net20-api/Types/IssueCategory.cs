@@ -14,9 +14,8 @@
    limitations under the License.
 */
 
-using System;
+using System.Diagnostics;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using RedmineClient.Extensions;
@@ -27,6 +26,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE_CATEGORY)]
     public sealed class IssueCategory : Identifiable<IssueCategory>
     {
@@ -169,14 +169,12 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(IssueCategory)}: {base.ToString()}, Project={Project}, AssignTo={AssignTo}, Name={Name}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(IssueCategory)}: {ToString()}, Project={Project}, AssignTo={AssignTo}, Name={Name}]";
+        
     }
 }

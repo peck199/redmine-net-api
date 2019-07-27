@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE_STATUS)]
     public sealed class IssueStatus : IdentifiableName, IEquatable<IssueStatus>
     {
@@ -152,9 +154,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(IssueStatus)}: {base.ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsClosed={IsClosed.ToString(CultureInfo.InvariantCulture)}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(IssueStatus)}: {ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}, IsClosed={IsClosed.ToString(CultureInfo.InvariantCulture)}]";
+        
     }
 }

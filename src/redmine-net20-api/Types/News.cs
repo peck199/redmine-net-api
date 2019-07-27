@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -26,6 +27,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.1
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.NEWS)]
     public sealed class News : Identifiable<News>
     {
@@ -174,9 +176,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(News)}: {base.ToString()}, Project={Project}, Author={Author}, Title={Title}, Summary={Summary}, Description={Description}, CreatedOn={CreatedOn?.ToString("u")}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(News)}: {ToString()}, Project={Project}, Author={Author}, Title={Title}, Summary={Summary}, Description={Description}, CreatedOn={CreatedOn?.ToString("u")}]";
+        
     }
 }

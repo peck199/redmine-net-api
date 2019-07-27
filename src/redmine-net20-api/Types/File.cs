@@ -16,8 +16,8 @@
 
 
 using System;
+using System.Diagnostics;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using RedmineClient.Extensions;
@@ -28,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.FILE)]
     public sealed class File : Identifiable<File>
     {
@@ -250,9 +251,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(File)}: {base.ToString()}, Name={Filename}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(File)}: {ToString()}, Name={Filename}]";
+        
     }
 }

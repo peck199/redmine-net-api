@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -27,6 +27,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Only the roles can be updated, the project and the user of a membership are read-only.
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.MEMBERSHIP)]
     public sealed class Membership : Identifiable<Membership>
     {
@@ -137,9 +138,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Membership)}: {base.ToString()}, Project={Project}, Roles={Roles.Dump()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Membership)}: {ToString()}, Project={Project}, Roles={Roles.Dump()}]";
+        
     }
 }

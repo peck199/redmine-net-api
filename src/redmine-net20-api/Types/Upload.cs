@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.UPLOAD)]
     public sealed class Upload : IXmlSerializable, IJsonSerializable, IEquatable<Upload>
     {
@@ -193,15 +195,13 @@ namespace RedmineClient.Types
                 return hashCode;
             }
         }
-        #endregion 
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[Upload: Token={Token}, FileName={FileName}, ContentType={ContentType}, Description={Description}]";
-        }
+        private string DebuggerDisplay => $"[Upload: Token={Token}, FileName={FileName}, ContentType={ContentType}, Description={Description}]";
+        
     }
 }

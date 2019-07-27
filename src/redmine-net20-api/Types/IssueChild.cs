@@ -15,8 +15,8 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using RedmineClient.Extensions;
@@ -27,6 +27,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
     public sealed class IssueChild : Identifiable<IssueChild>, ICloneable
     {
@@ -148,9 +149,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(IssueChild)}: {base.ToString()}, Tracker={Tracker}, Subject={Subject}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(IssueChild)}: {ToString()}, Tracker={Tracker}, Subject={Subject}]";
+        
     }
 }

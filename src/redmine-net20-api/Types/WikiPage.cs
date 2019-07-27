@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.WIKI_PAGE)]
     public sealed class WikiPage : Identifiable<WikiPage>
     {
@@ -75,7 +77,7 @@ namespace RedmineClient.Types
         /// <value>
         /// The attachments.
         /// </value>
-        public IList<Attachment> Attachments { get;  set; }
+        public IList<Attachment> Attachments { get; set; }
 
         /// <summary>
         /// Sets the uploads.
@@ -128,7 +130,7 @@ namespace RedmineClient.Types
         {
             writer.WriteElementString(RedmineKeys.TEXT, Text);
             writer.WriteElementString(RedmineKeys.COMMENTS, Comments);
-            writer.WriteValueOrEmpty<int>( RedmineKeys.VERSION, Version);
+            writer.WriteValueOrEmpty<int>(RedmineKeys.VERSION, Version);
             writer.WriteArray(RedmineKeys.UPLOADS, Uploads);
         }
 
@@ -232,14 +234,12 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $@"[{nameof(WikiPage)}: {base.ToString()}, Title={Title}, Text={Text}, Comments={Comments}, 
+        private string DebuggerDisplay => $@"[{nameof(WikiPage)}: {ToString()}, Title={Title}, Text={Text}, Comments={Comments}, 
 Version={Version.ToString(CultureInfo.InvariantCulture)}, 
 Author={Author}, 
 CreatedOn={CreatedOn?.ToString("u")}, 
 UpdatedOn={UpdatedOn?.ToString("u")}, 
 Attachments={Attachments.Dump()}]";
-        }
+
     }
 }

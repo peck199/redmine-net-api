@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.DETAIL)]
     public sealed class Detail : IXmlSerializable, IJsonSerializable, IEquatable<Detail>
     {
@@ -208,14 +210,12 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-       
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Detail)}: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Detail)}: Property={Property}, Name={Name}, OldValue={OldValue}, NewValue={NewValue}]";
+        
     }
 }

@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.POSSIBLE_VALUE)]
     public sealed class CustomFieldPossibleValue : IXmlSerializable,IJsonSerializable, IEquatable<CustomFieldPossibleValue>
     {
@@ -167,14 +169,12 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-      
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString()
-        {
-            return $"[{nameof(CustomFieldPossibleValue)}: Label:{Label}, Value:{Value}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(CustomFieldPossibleValue)}: Label:{Label}, Value:{Value}]";
+        
     }
 }

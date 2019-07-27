@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 2.2
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY_ACTIVITY)]
     public sealed class TimeEntryActivity : IdentifiableName, IEquatable<TimeEntryActivity>
     {
@@ -162,9 +164,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(TimeEntryActivity)}:{base.ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(TimeEntryActivity)}:{ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}]";
+        
     }
 }

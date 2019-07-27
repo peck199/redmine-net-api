@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -34,6 +35,7 @@ namespace RedmineClient.Types
     /// Possible values: children, attachments, relations, changesets and journals. To fetch multiple associations use comma (e.g ?include=relations,journals). 
     /// See Issue journals for more information.
     /// </remarks>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.ISSUE)]
     public sealed class Issue : Identifiable<Issue>, ICloneable
     {
@@ -575,15 +577,13 @@ namespace RedmineClient.Types
             return issue;
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $@"[{nameof(Issue)}: {base.ToString()}, Project={Project}, Tracker={Tracker}, Status={Status}, 
+        private string DebuggerDisplay =>
+               $@"[{nameof(Issue)}: {ToString()}, Project={Project}, Tracker={Tracker}, Status={Status}, 
 Priority={Priority}, Author={Author}, Category={Category}, Subject={Subject}, Description={Description}, 
 StartDate={StartDate?.ToString("u")}, 
 DueDate={DueDate?.ToString("u")}, 
@@ -607,6 +607,6 @@ Relations={Relations.Dump()},
 Children={Children.Dump()}, 
 Uploads={Uploads.Dump()}, 
 Watchers={Watchers.Dump()}]";
-        }
+        
     }
 }

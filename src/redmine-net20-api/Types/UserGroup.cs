@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace RedmineClient.Types
@@ -21,6 +22,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.GROUP)]
     public sealed class UserGroup : IdentifiableName
     {
@@ -28,9 +30,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return $"[{nameof(UserGroup)}: {base.ToString()}]";
-		}
+        private string DebuggerDisplay => $"[{nameof(UserGroup)}: {ToString()}]";
+		
     }
 }

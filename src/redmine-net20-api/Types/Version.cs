@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.VERSION)]
     public sealed class Version : Identifiable<Version>
     {
@@ -224,15 +226,13 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $@"[{nameof(Version)}: {base.ToString()}, Project={Project}, Description={Description}, 
+        private string DebuggerDisplay => $@"[{nameof(Version)}: {ToString()}, Project={Project}, Description={Description}, 
 Status={Status.ToString("G")},
  DueDate={DueDate?.ToString("u")}, 
 Sharing={Sharing.ToString("G")}, 
 CreatedOn={CreatedOn?.ToString("u")}, 
 UpdatedOn={UpdatedOn?.ToString("u")}, 
 CustomFields={CustomFields.Dump()}]";
-        }
+        
     }
 }

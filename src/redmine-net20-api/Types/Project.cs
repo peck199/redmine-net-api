@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.0
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.PROJECT)]
     public sealed class Project : IdentifiableName, IEquatable<Project>
     {
@@ -341,10 +343,8 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return
-                $@"[Project: {base.ToString()}, Identifier={Identifier}, Description={Description}, Parent={Parent}, HomePage={HomePage}, 
+        private string DebuggerDisplay =>
+                $@"[Project: {ToString()}, Identifier={Identifier}, Description={Description}, Parent={Parent}, HomePage={HomePage}, 
 CreatedOn={CreatedOn?.ToString("u")}, 
 UpdatedOn={UpdatedOn?.ToString("u")}, 
 Status={Status.ToString("G")}, 
@@ -355,6 +355,6 @@ CustomFields={CustomFields.Dump()},
 IssueCategories={IssueCategories.Dump()}, 
 EnabledModules={EnabledModules.Dump()}, 
 TimeEntryActivities = {TimeEntryActivities.Dump()}]";
-        }
+        
     }
 }

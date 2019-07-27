@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Schema;
@@ -29,6 +30,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CHANGE_SET)]
     public sealed class ChangeSet : IXmlSerializable, IJsonSerializable, IEquatable<ChangeSet>
     {
@@ -190,13 +192,12 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $@"[{nameof(ChangeSet)}: 
+        private string DebuggerDisplay =>
+             $@"[{nameof(ChangeSet)}: 
 Revision={Revision.ToString(CultureInfo.InvariantCulture)}, 
 User='{User}', 
 CommittedOn={CommittedOn?.ToString("u")}, 
 Comments='{Comments}']";
-        }
+        
     }
 }

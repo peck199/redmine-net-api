@@ -14,15 +14,16 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml.Serialization;
-using RedmineClient.Internals;
 
 namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.USER)]
     public sealed class GroupUser : IdentifiableName, IValue
     {
@@ -32,14 +33,12 @@ namespace RedmineClient.Types
         /// </summary>
         public string Value => Id.ToString(CultureInfo.InvariantCulture);
         #endregion
-                
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return $"[{nameof(GroupUser)}: {base.ToString()}]";
-		}
+        private string DebuggerDisplay => $"[{nameof(GroupUser)}: {ToString()}]";
+		
     }
 }

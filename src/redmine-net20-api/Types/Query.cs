@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 1.3
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.QUERY)]
     public sealed class Query : IdentifiableName, IEquatable<Query>
     {
@@ -134,14 +136,12 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Query)}: {base.ToString()}, IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, ProjectId={ProjectId?.ToString(CultureInfo.InvariantCulture)}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Query)}: {ToString()}, IsPublic={IsPublic.ToString(CultureInfo.InvariantCulture)}, ProjectId={ProjectId?.ToString(CultureInfo.InvariantCulture)}]";
+        
     }
 }

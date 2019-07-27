@@ -261,32 +261,8 @@ namespace RedmineClient.Types
         }
         #endregion
        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-		public override string ToString()
-        {
-            return
-                $@"[{nameof(CustomField)}: {base.ToString()}
-, CustomizedType={CustomizedType}
-, FieldFormat={FieldFormat}
-, Regexp={Regexp}
-, MinLength={MinLength?.ToString(CultureInfo.InvariantCulture)}
-, MaxLength={MaxLength?.ToString(CultureInfo.InvariantCulture)}
-, IsRequired={IsRequired.ToString()}
-, IsFilter={IsFilter.ToString()}
-, Searchable={Searchable.ToString()}
-, Multiple={Multiple.ToString()}
-, DefaultValue={DefaultValue}
-, Visible={Visible.ToString()}
-, PossibleValues={PossibleValues.Dump()}
-, Trackers={Trackers.Dump()}
-, Roles={Roles.Dump()}]";
-        }
-
         private string DebuggerDisplay =>
-            $@"[{nameof(CustomField)}: {base.ToString()}
+            $@"[{nameof(CustomField)}: {ToString()}
 , CustomizedType={CustomizedType}
 , FieldFormat={FieldFormat}
 , Regexp={Regexp}

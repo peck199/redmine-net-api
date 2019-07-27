@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// Availability 2.1
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.GROUP)]
     public sealed class Group : IdentifiableName, IEquatable<Group>
     {
@@ -99,7 +101,7 @@ namespace RedmineClient.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.NAME, Name);
-            //TODO: change
+            //TODO: change to repeatable elements
             writer.WriteArrayIds(RedmineKeys.USER_IDS, Users, typeof(int), GetGroupUserId);
         }
 
@@ -206,10 +208,8 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Group)}: {base.ToString()}, Users={Users.Dump()}, CustomFields={CustomFields.Dump()}, Memberships={Memberships.Dump()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Group)}: {ToString()}, Users={Users.Dump()}, CustomFields={CustomFields.Dump()}, Memberships={Memberships.Dump()}]";
+        
 
         /// <summary>
         /// 

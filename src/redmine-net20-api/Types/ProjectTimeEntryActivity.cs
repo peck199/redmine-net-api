@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace RedmineClient.Types
@@ -21,6 +22,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.TIME_ENTRY_ACTIVITY)]
     public sealed class ProjectTimeEntryActivity : IdentifiableName
     {
@@ -39,9 +41,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString ()
-        {
-            return $"[{nameof(ProjectTimeEntryActivity)}: {base.ToString()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(ProjectTimeEntryActivity)}: {ToString()}]";
+        
     }
 }

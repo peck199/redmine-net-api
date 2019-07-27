@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
@@ -27,6 +28,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.JOURNAL)]
     public sealed class Journal : Identifiable<Journal>
     {
@@ -174,9 +176,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[{nameof(Journal)}: {base.ToString()}, User={User}, Notes={Notes}, CreatedOn={CreatedOn?.ToString("u")}, Details={Details.Dump()}]";
-        }
+        private string DebuggerDisplay => $"[{nameof(Journal)}: {ToString()}, User={User}, Notes={Notes}, CreatedOn={CreatedOn?.ToString("u")}, Details={Details.Dump()}]";
+        
     }
 }
