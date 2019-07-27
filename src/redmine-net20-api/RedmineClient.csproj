@@ -72,6 +72,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Async\**" />
+    <EmbeddedResource Remove="Async\**" />
+    <None Remove="Async\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Extensions\LoggerExtensions.cs" />
+    <Compile Remove="Extensions\WebExtensions.cs" />
+    <Compile Remove="Internals\RedmineSerializer.cs" />
+    <Compile Remove="Internals\UrlHelper.cs" />
+    <Compile Remove="Internals\WebApiHelper.cs" />
+    <Compile Remove="IRedmineManager.cs" />
+    <Compile Remove="RedmineManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
 
