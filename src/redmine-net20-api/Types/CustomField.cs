@@ -16,106 +16,94 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
-    public class CustomField : IdentifiableName, IEquatable<CustomField>
+    public sealed class CustomField : IdentifiableName, IEquatable<CustomField>
     {
+        #region Properties
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.CUSTOMIZED_TYPE)]
-        public string CustomizedType { get; set; }
+        public string CustomizedType { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.FIELD_FORMAT)]
-        public string FieldFormat { get; set; }
+        public string FieldFormat { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.REGEXP)]
-        public string Regexp { get; set; }
+        public string Regexp { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.MIN_LENGTH)]
-        public int? MinLength { get; set; }
+        public int? MinLength { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.MAX_LENGTH)]
-        public int? MaxLength { get; set; }
+        public int? MaxLength { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.IS_REQUIRED)]
-        public bool IsRequired { get; set; }
+        public bool IsRequired { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.IS_FILTER)]
-        public bool IsFilter { get; set; }
+        public bool IsFilter { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.SEARCHABLE)]
-        public bool Searchable { get; set; }
+        public bool Searchable { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.MULTIPLE)]
-        public bool Multiple { get; set; }
+        public bool Multiple { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.DEFAULT_VALUE)]
-        public string DefaultValue { get; set; }
+        public string DefaultValue { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.VISIBLE)]
-        public bool Visible { get; set; }
+        public bool Visible { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlArray(RedmineKeys.POSSIBLE_VALUES)]
-        [XmlArrayItem(RedmineKeys.POSSIBLE_VALUE)]
-        public IList<CustomFieldPossibleValue> PossibleValues { get; set; }
+        public IList<CustomFieldPossibleValue> PossibleValues { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlArray(RedmineKeys.TRACKERS)]
-        [XmlArrayItem(RedmineKeys.TRACKER)]
-        public IList<TrackerCustomField> Trackers { get; set; }
+        public IList<TrackerCustomField> Trackers { get; internal set; }
 
         /// <summary>
         /// 
         /// </summary>
-        [XmlArray(RedmineKeys.ROLES)]
-        [XmlArrayItem(RedmineKeys.ROLE)]
-        public IList<CustomFieldRole> Roles { get; set; }
+        public IList<CustomFieldRole> Roles { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerializable 
         /// <summary>
         /// 
         /// </summary>
@@ -169,13 +157,70 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+       
+        #endregion
 
+        #region Implementation of IJsonSerialization
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteXml(XmlWriter writer) { }
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadAsString(); break;
+
+                    case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadAsString(); break;
+
+                    case RedmineKeys.REGEXP: Regexp = reader.ReadAsString(); break;
+
+                    case RedmineKeys.MIN_LENGTH: MinLength = reader.ReadAsInt32(); break;
+
+                    case RedmineKeys.MAX_LENGTH: MaxLength = reader.ReadAsInt32(); break;
+
+                    case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.IS_FILTER: IsFilter = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.SEARCHABLE: Searchable = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.VISIBLE: Visible = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadAsString(); break;
+
+                    case RedmineKeys.MULTIPLE: Multiple = reader.ReadAsBool(); break;
+
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<TrackerCustomField>(); break;
+
+                    case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<CustomFieldRole>(); break;
+
+                    case RedmineKeys.POSSIBLE_VALUES: PossibleValues = reader.ReadAsCollection<CustomFieldPossibleValue>(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+       
+        #endregion
+
+        #region Implementation of IEquatable<CustomField>
         /// <summary>
         /// 
         /// </summary>
@@ -225,34 +270,49 @@ namespace Redmine.Net.Api.Types
             unchecked
             {
                 var hashCode = 13;
-                hashCode = HashCodeHelper.GetHashCode(Id,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(IsFilter,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(IsRequired,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(Multiple,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(Searchable,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(Visible,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(CustomizedType,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(DefaultValue,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(FieldFormat,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(MaxLength,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(MinLength,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(Name,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(Regexp,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(PossibleValues,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(Roles,hashCode);
-				hashCode = HashCodeHelper.GetHashCode(Trackers,hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Id, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsFilter, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsRequired, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Multiple, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Searchable, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Visible, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(CustomizedType, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(DefaultValue, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(FieldFormat, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(MaxLength, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(MinLength, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Name, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Regexp, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(PossibleValues, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Roles, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(Trackers, hashCode);
                 return hashCode;
             }
         }
-
+        #endregion
+       
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return string.Format ("[CustomField: Id={0}, Name={1}, CustomizedType={2}, FieldFormat={3}, Regexp={4}, MinLength={5}, MaxLength={6}, IsRequired={7}, IsFilter={8}, Searchable={9}, Multiple={10}, DefaultValue={11}, Visible={12}, PossibleValues={13}, Trackers={14}, Roles={15}]",
-				Id, Name, CustomizedType, FieldFormat, Regexp, MinLength, MaxLength, IsRequired, IsFilter, Searchable, Multiple, DefaultValue, Visible, PossibleValues, Trackers, Roles);
-		}
+		public override string ToString()
+        {
+            return
+                $@"[{nameof(CustomField)}: {base.ToString()}
+, CustomizedType={CustomizedType}
+, FieldFormat={FieldFormat}
+, Regexp={Regexp}
+, MinLength={MinLength?.ToString(CultureInfo.InvariantCulture)}
+, MaxLength={MaxLength?.ToString(CultureInfo.InvariantCulture)}
+, IsRequired={IsRequired.ToString()}
+, IsFilter={IsFilter.ToString()}
+, Searchable={Searchable.ToString()}
+, Multiple={Multiple.ToString()}
+, DefaultValue={DefaultValue}
+, Visible={Visible.ToString()}
+, PossibleValues={PossibleValues.Dump()}
+, Trackers={Trackers.Dump()}
+, Roles={Roles.Dump()}]";
+        }
     }
 }

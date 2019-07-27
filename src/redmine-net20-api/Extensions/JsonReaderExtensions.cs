@@ -1,32 +1,19 @@
-﻿/*
-   Copyright 2016 - 2019 Adrian Popescu.
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Newtonsoft.Json;
-using Redmine.Net.Api.Exceptions;
+using RedmineClient.Exceptions;
 using RedmineClient.Internals.Serialization;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    public static partial class JsonExtensions
+    internal static partial class JsonExtensions
     {
+        private const string INCLUDE_DATE_TIME_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss UTC";
+
         /// <summary>
         /// 
         /// </summary>
@@ -48,36 +35,43 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
+        /// Reads the element content as nullable date time.
+        /// </summary>
+        /// <param name="reader">The reader.</param>
+        /// <returns></returns>
+        public static DateTime? ReadAsNullableDateTime(this JsonReader reader)
+        {
+            var content = reader.ReadAsString();
+
+            if (content.IsNullOrWhiteSpace() || !DateTime.TryParse(content, out var result))
+            {
+                if (!DateTime.TryParseExact(content, INCLUDE_DATE_TIME_FORMAT, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                {
+                    return null;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
-        /// <param name="readInnerArray"></param>
         /// <returns></returns>
-        public static List<T> ReadAsCollection<T>(this JsonReader reader, bool readInnerArray = false) where T : class, new()
+        public static IEnumerable<T> ReadAsEnumerable<T>(this JsonReader reader) where T : class
         {
-            var isJsonSerializable = typeof(IJsonSerializable).IsAssignableFrom(typeof(T));
-
-            if (!isJsonSerializable)
+            if (!typeof(T).Implements<IJsonSerializable>())
             {
                 throw new RedmineException($"Entity of type '{typeof(T)}' should implement IJsonSerializable.");
             }
-
-            var col = new List<T>();
 
             while (reader.Read())
             {
                 if (reader.TokenType == JsonToken.EndArray)
                 {
                     break;
-                }
-
-                if (readInnerArray)
-                {
-                    if (reader.TokenType == JsonToken.PropertyName)
-                    {
-                        break;
-                    }
                 }
 
                 if (reader.TokenType == JsonToken.StartArray)
@@ -90,6 +84,97 @@ namespace Redmine.Net.Api.Extensions
                 ((IJsonSerializable)entity).ReadJson(reader);
 
                 var des = entity;
+
+                yield return des;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static List<T> ReadAsCollection<T>(this JsonReader reader) where T : class
+        {
+            if (!typeof(T).Implements<IJsonSerializable>())
+            {
+                throw new RedmineException($"Entity of type '{typeof(T)}' should implement IJsonSerializable.");
+            }
+
+            List<T> col = null;
+
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndArray)
+                {
+                    break;
+                }
+
+                if (reader.TokenType == JsonToken.StartArray)
+                {
+                    continue;
+                }
+
+                var entity = Activator.CreateInstance<T>();
+
+                ((IJsonSerializable)entity).ReadJson(reader);
+
+                var des = entity;
+
+                if (col == null)
+                {
+                    col = new List<T>();
+                }
+
+                col.Add(des);
+            }
+
+            return col;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static List<T> ReadAsArray<T>(this JsonReader reader) where T : class
+        {
+            if (!typeof(T).Implements<IJsonSerializable>())
+            {
+                throw new RedmineException($"Entity of type '{typeof(T)}' should implement IJsonSerializable.");
+            }
+
+            List<T> col = null;
+
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndArray)
+                {
+                    break;
+                }
+
+                if (reader.TokenType == JsonToken.PropertyName)
+                {
+                    break;
+                }
+
+                if (reader.TokenType == JsonToken.StartArray)
+                {
+                    continue;
+                }
+
+                var entity = Activator.CreateInstance<T>();
+
+                ((IJsonSerializable)entity).ReadJson(reader);
+
+                var des = entity;
+
+                if (col == null)
+                {
+                    col = new List<T>();
+                }
 
                 col.Add(des);
             }

@@ -15,27 +15,53 @@
 */
 
 using System.Xml.Serialization;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.TRACKER)]
-	public class ProjectTracker : IdentifiableName,  IValue
+    public sealed class ProjectTracker : IdentifiableName, IValue
     {
         /// <summary>
         /// 
         /// </summary>
-		public string Value{get{return Id.ToString ();}}
+        public ProjectTracker(){}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trackerId">the tracker id: 1 for Bug, etc.</param>
+        /// <param name="name"></param>
+        public ProjectTracker(int trackerId, string name)
+        {
+            Id = trackerId;
+            Name = name;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trackerId"></param>
+        internal ProjectTracker(int trackerId)
+        {
+            Id = trackerId;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+		public string Value => Id.ToString();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString ()
-		{
-			return string.Format ("[ProjectTracker: {0}]", base.ToString());
-		}
+		public override string ToString()
+        {
+            return $"[{nameof(ProjectTracker)}: {base.ToString()}]";
+        }
     }
 }

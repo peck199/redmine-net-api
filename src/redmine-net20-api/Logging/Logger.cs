@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-namespace Redmine.Net.Api.Logging
+namespace RedmineClient.Logging
 {
     /// <summary>
     /// 

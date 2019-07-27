@@ -16,24 +16,76 @@
 
 using System;
 using System.Globalization;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Internals;
+using RedmineClient.Internals.Serialization;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-	public abstract class Identifiable<T> : IEquatable<T> where T : Identifiable<T>
+	public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
     {
-
+        #region Properties
         /// <summary>
-        /// Gets or sets the id.
+        /// Gets the id.
         /// </summary>
         /// <value>The id.</value>
-        [XmlAttribute(RedmineKeys.ID)]
-        public int Id { get; set; }
+        public int Id { get; protected internal set; }
+        #endregion
+
+        #region Implementation of IXmlSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public XmlSchema GetSchema() { return null; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public virtual void ReadXml(XmlReader reader){}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void WriteXml(XmlWriter writer){}
+        #endregion
+        
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public virtual void ReadJson(JsonReader reader){}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void WriteJson(JsonWriter writer){}
+        #endregion
+        
+        #region Implementation of IEquatable<Identifiable<T>>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Identifiable<T> other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return Id == other.Id;
+        }
 
         /// <summary>
         /// 
@@ -43,18 +95,6 @@ namespace Redmine.Net.Api.Types
         public virtual bool Equals(T other)
         {
             if (other == null) return false;
-            return Id == other.Id;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(Identifiable<T> other)
-        {
-            if (other == null) return false;
-
             return Id == other.Id;
         }
 
@@ -106,6 +146,7 @@ namespace Redmine.Net.Api.Types
         {
             return !Equals(left, right);
         }
+        #endregion
 
         /// <summary>
         /// 

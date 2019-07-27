@@ -16,13 +16,13 @@
 
 using System.Xml.Serialization;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.GROUP)]
-    public class UserGroup : IdentifiableName
+    public sealed class UserGroup : IdentifiableName
     {
         /// <summary>
         /// 
@@ -30,7 +30,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
 		public override string ToString ()
 		{
-			return string.Format ("[UserGroup: {0}]", base.ToString());
+			return $"[{nameof(UserGroup)}: {base.ToString()}]";
 		}
     }
 }

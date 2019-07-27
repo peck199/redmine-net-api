@@ -18,9 +18,8 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api;
-using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Extensions;
+using RedmineClient.Exceptions;
+using RedmineClient.Extensions;
 
 namespace RedmineClient.Internals.Serialization
 {

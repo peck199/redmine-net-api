@@ -17,7 +17,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Redmine.Net.Api.Exceptions
+namespace RedmineClient.Exceptions
 {
     /// <summary>
     /// Thrown in case something went wrong in Redmine

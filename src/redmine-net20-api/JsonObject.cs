@@ -16,9 +16,9 @@
 
 using System;
 using Newtonsoft.Json;
-using Redmine.Net.Api.Extensions;
+using RedmineClient.Extensions;
 
-namespace RedmineApi.Core.Serializers
+namespace RedmineClient
 {
     /// <summary>
     /// 

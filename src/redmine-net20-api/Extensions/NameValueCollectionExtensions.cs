@@ -16,7 +16,7 @@
 
 using System.Collections.Specialized;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// 

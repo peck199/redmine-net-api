@@ -18,41 +18,38 @@ using System;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE)]
-    public class IssueChild : Identifiable<IssueChild>, IXmlSerializable, ICloneable
+    public sealed class IssueChild : Identifiable<IssueChild>, ICloneable
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the tracker.
         /// </summary>
         /// <value>The tracker.</value>
-        [XmlElement(RedmineKeys.TRACKER)]
-        public IdentifiableName Tracker { get; set; }
+        public IdentifiableName Tracker { get; internal set; }
 
         /// <summary>
         /// Gets or sets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        [XmlElement(RedmineKeys.SUBJECT)]
-        public String Subject { get; set; }
+        public string Subject { get; internal set; }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
-
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
             reader.Read();
@@ -75,23 +72,42 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+        #endregion
 
+        #region Implementation of IJsonSerialization
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer) { }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
         {
-            var issueChild = new IssueChild { Subject = Subject, Tracker = Tracker };
-            return issueChild;
-        }
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
+
+                    case RedmineKeys.SUBJECT: Subject = reader.ReadAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+        
+        #region Implementation of IEquatable<IssueChild>
         /// <summary>
         /// 
         /// </summary>
@@ -118,6 +134,20 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion 
+
+        #region Implementation of IClonable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+          var issueChild = new IssueChild { Subject = Subject, Tracker = Tracker };
+          return issueChild;
+        }
+        #endregion
 
         /// <summary>
         /// 
@@ -125,7 +155,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[IssueChild: {0}, Tracker={1}, Subject={2}]", base.ToString(), Tracker, Subject);
+            return $"[{nameof(IssueChild)}: {base.ToString()}, Tracker={Tracker}, Subject={Subject}]";
         }
     }
 }

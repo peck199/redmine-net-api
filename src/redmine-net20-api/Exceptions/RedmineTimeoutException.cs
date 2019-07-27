@@ -15,13 +15,12 @@
 */
 
 using System;
-using System.Runtime.Serialization;
 
-namespace Redmine.Net.Api.Exceptions
+namespace RedmineClient.Exceptions
 {
     /// <summary>
     /// </summary>
-    /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    /// <seealso cref="RedmineException" />
     public sealed class RedmineTimeoutException : RedmineException
     {
         /// <summary>

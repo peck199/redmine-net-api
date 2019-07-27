@@ -15,28 +15,32 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.ROLE)]
-    public class MembershipRole : IdentifiableName, IEquatable<MembershipRole>
+    public sealed class MembershipRole : IdentifiableName, IEquatable<MembershipRole>, IValue
     {
+        #region Properties
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="MembershipRole"/> is inherited.
         /// </summary>
         /// <value>
         ///   <c>true</c> if inherited; otherwise, <c>false</c>.
         /// </value>
-        [XmlAttribute(RedmineKeys.INHERITED)]
-        public bool Inherited { get; set; }
+        public bool Inherited { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// Reads the XML.
         /// </summary>
@@ -57,7 +61,52 @@ namespace Redmine.Net.Api.Types
         {
             writer.WriteValue(Id);
         }
+        #endregion
+        
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.INHERITED: Inherited = reader.ReadAsBool(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            writer.WriteProperty(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+        }
+
+        #endregion
+
+        #region Implementation of IEquatable<MembershipRole>
         /// <summary>
         /// 
         /// </summary>
@@ -67,6 +116,19 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id && Name == other.Name && Inherited == other.Inherited;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals(obj as MembershipRole);
         }
 
         /// <summary>
@@ -84,6 +146,14 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
+        
+        #region Implementation of IClonable
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value => Id.ToString(CultureInfo.InvariantCulture);
+        #endregion
 
         /// <summary>
         /// 
@@ -91,7 +161,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[MembershipRole: {1}, Inherited={0}]", Inherited, base.ToString());
+            return $"[MembershipRole: {base.ToString()}, Inherited={Inherited.ToString(CultureInfo.InvariantCulture)}]";
         }
     }
 }

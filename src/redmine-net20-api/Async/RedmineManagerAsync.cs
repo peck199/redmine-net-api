@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using Redmine.Net.Api.Types;
+using RedmineClient.Types;
 
-namespace Redmine.Net.Api.Async
+namespace RedmineClient.Async
 {
     /// <summary>
     /// 

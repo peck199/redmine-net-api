@@ -15,7 +15,7 @@
 */
 
 #if NET20
-namespace Redmine.Net.Api.Internals
+namespace RedmineClient.Internals
 {
     /// <summary>
     /// 

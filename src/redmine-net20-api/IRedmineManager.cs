@@ -19,8 +19,9 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using RedmineClient.Types;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient
 {
     /// <summary>
     /// 

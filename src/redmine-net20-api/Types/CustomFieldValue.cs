@@ -15,23 +15,112 @@
 */
 
 using System;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Internals;
+using RedmineClient.Internals.Serialization;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// 
     /// </summary>
     [XmlRoot(RedmineKeys.VALUE)]
-    public class CustomFieldValue : IEquatable<CustomFieldValue>, ICloneable
+    public class CustomFieldValue : IXmlSerializable, IJsonSerializable, IEquatable<CustomFieldValue>, ICloneable 
     {
         /// <summary>
         /// 
         /// </summary>
-        [XmlText]
-        public string Info { get; set; }
+        public CustomFieldValue()
+        {
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        public CustomFieldValue(string value)
+        {
+            Info = value;
+        }
+
+        #region Properties
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Info { get; internal set; }
+        #endregion
+        
+        #region Implementation of IXmlSerializable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadXml(XmlReader reader)
+        {
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case RedmineKeys.VALUE: Info = reader.ReadElementContentAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteXml(XmlWriter writer){}
+
+        #endregion
+        
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            if(reader.TokenType == JsonToken.PropertyName)
+            {
+                return;
+            }
+            
+            if (reader.TokenType == JsonToken.String)
+            {
+                Info = reader.Value as string;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer){}
+        #endregion
+
+        #region Implementation of IEquatable<CustomFieldValue>
         /// <summary>
         /// 
         /// </summary>
@@ -39,6 +128,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public bool Equals(CustomFieldValue other)
         {
+            if (other == null) return false;
             return Info.Equals(other.Info);
         }
 
@@ -68,16 +158,9 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Format("[CustomFieldValue: Info={0}]", Info);
-        }
-
+        #endregion
+        
+        #region Implementation of IClonable
         /// <summary>
         /// 
         /// </summary>
@@ -86,6 +169,16 @@ namespace Redmine.Net.Api.Types
         {
             var customFieldValue = new CustomFieldValue { Info = Info };
             return customFieldValue;
+        }
+        #endregion
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"[{nameof(CustomFieldValue)}: {Info}]";
         }
     }
 }

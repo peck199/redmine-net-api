@@ -15,14 +15,13 @@
 */
 
 using System;
-using System.Runtime.Serialization;
 
-namespace Redmine.Net.Api.Exceptions
+namespace RedmineClient.Exceptions
 {
     /// <summary>
     /// Thrown in case something went wrong while trying to login.
     /// </summary>
-    /// <seealso cref="Redmine.Net.Api.Exceptions.RedmineException" />
+    /// <seealso cref="RedmineException" />
     public sealed class UnauthorizedException : RedmineException
     {
         /// <summary>

@@ -15,80 +15,77 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
-using System.Xml.Schema;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// Availability 1.3
     /// </summary>
     [XmlRoot(RedmineKeys.ATTACHMENT)]
-    public class Attachment : Identifiable<Attachment>, IXmlSerializable
+    public sealed class Attachment : Identifiable<Attachment>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement(RedmineKeys.FILENAME)]
-        public String FileName { get; set; }
+        public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the size of the file.
+        /// Gets the size of the file.
         /// </summary>
         /// <value>The size of the file.</value>
-        [XmlElement(RedmineKeys.FILESIZE)]
-        public int FileSize { get; set; }
+        public int FileSize { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the type of the content.
+        /// Gets the type of the content.
         /// </summary>
         /// <value>The type of the content.</value>
-        [XmlElement(RedmineKeys.CONTENT_TYPE)]
-        public String ContentType { get; set; }
+        public string ContentType { get; internal set; }
 
         /// <summary>
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        [XmlElement(RedmineKeys.DESCRIPTION)]
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         /// <summary>
-        /// Gets or sets the content URL.
+        /// Gets the content URL.
         /// </summary>
         /// <value>The content URL.</value>
-        [XmlElement(RedmineKeys.CONTENT_URL)]
-        public String ContentUrl { get; set; }
+        public string ContentUrl { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the author.
+        /// Gets the author.
         /// </summary>
         /// <value>The author.</value>
-        [XmlElement(RedmineKeys.AUTHOR)]
-        public IdentifiableName Author { get; set; }
+        public IdentifiableName Author { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        /// Gets the created on.
         /// </summary>
         /// <value>The created on.</value>
-        [XmlElement(RedmineKeys.CREATED_ON)]
-        public DateTime? CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
-        /// 
+        /// Gets the thumbnail url.
         /// </summary>
-        /// <returns></returns>
-        public XmlSchema GetSchema() { return null; }
+        public string ThumbnailUrl { get; internal set; }
+        #endregion
+
+        #region Implementation of IXmlSerializable
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        public void ReadXml(XmlReader reader)
+        public override void ReadXml(XmlReader reader)
         {
             reader.Read();
             while (!reader.EOF)
@@ -105,9 +102,11 @@ namespace Redmine.Net.Api.Types
 
                     case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
 
-                    case RedmineKeys.FILESIZE: FileSize = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
 
                     case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.THUMBNAIL_URL : ThumbnailUrl = reader.ReadElementContentAsString(); break;
 
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
 
@@ -126,8 +125,74 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer) { }
+        public override void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+            writer.WriteElementString(RedmineKeys.FILENAME, FileName);
+        }
 
+        #endregion
+
+        #region Implementation of IJsonSerializable
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
+
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadAsString(); break;
+
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsNullableDateTime(); break;
+
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+
+                    case RedmineKeys.FILENAME: FileName = reader.ReadAsString(); break;
+
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+
+        public override void WriteJson(JsonWriter writer) 
+        {
+            using(new JsonObject(writer, RedmineKeys.ATTACHMENT))
+            {
+                writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+                writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+            }
+        }
+        #endregion
+
+        #region Implementation of IEquatable<CustomFieldValue>
         /// <summary>
         /// 
         /// </summary>
@@ -141,6 +206,7 @@ namespace Redmine.Net.Api.Types
                 && FileSize == other.FileSize
                 && ContentType == other.ContentType
                 && Author == other.Author
+                && ThumbnailUrl == other.ThumbnailUrl
                 && CreatedOn == other.CreatedOn
                 && Description == other.Description
                 && ContentUrl == other.ContentUrl);
@@ -162,10 +228,12 @@ namespace Redmine.Net.Api.Types
                 hashCode = HashCodeHelper.GetHashCode(CreatedOn, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Description, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(ContentUrl, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(ThumbnailUrl, hashCode);
 
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
@@ -173,8 +241,16 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Attachment: {7}, FileName={0}, FileSize={1}, ContentType={2}, Description={3}, ContentUrl={4}, Author={5}, CreatedOn={6}]",
-                FileName, FileSize, ContentType, Description, ContentUrl, Author, CreatedOn, base.ToString());
+            return
+                $@"[{nameof(Attachment)}: 
+{base.ToString()}, 
+FileName={FileName}, 
+FileSize={FileSize.ToString(CultureInfo.InvariantCulture)}, 
+ContentType={ContentType}, 
+Description={Description}, 
+ContentUrl={ContentUrl}, 
+Author={Author}, 
+CreatedOn={CreatedOn?.ToString("u")}]";
         }
     }
 }

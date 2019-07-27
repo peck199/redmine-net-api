@@ -17,7 +17,7 @@
 using System;
 using System.Globalization;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// 
@@ -37,7 +37,7 @@ namespace Redmine.Net.Api.Extensions
                 return true;
             }
 
-            for (int index = 0; index < value.Length; ++index)
+            for (var index = 0; index < value.Length; ++index)
             {
                 if (!char.IsWhiteSpace(value[index]))
                 {

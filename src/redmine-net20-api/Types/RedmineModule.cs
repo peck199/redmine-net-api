@@ -14,48 +14,57 @@
    limitations under the License.
 */
 
+
 namespace RedmineClient.Types
 {
     /// <summary>
-    /// 
+    /// The redmine module.
     /// </summary>
-    public enum IssueRelationType
+    public static class RedmineModule
     {
         /// <summary>
         /// 
         /// </summary>
-        Relates = 1,
+        public const string BOARDS = "boards";
+
         /// <summary>
         /// 
         /// </summary>
-        Duplicates,
+        public const string CALENDAR = "calendar";
+
         /// <summary>
         /// 
         /// </summary>
-        Duplicated,
+        public const string DOCUMENTS = "documents";
+
         /// <summary>
         /// 
         /// </summary>
-        Blocks,
+        public const string FILES = "files";
+
         /// <summary>
         /// 
         /// </summary>
-        Blocked,
+        public const string GANTT = "gantt";
         /// <summary>
         /// 
         /// </summary>
-        Precedes,
+        public const string ISSUE_TRACKING = "issue_tracking";
         /// <summary>
         /// 
         /// </summary>
-        Follows,
+        public const string NEWS = "news";
         /// <summary>
         /// 
         /// </summary>
-        copied_to,
+        public const string REPOSITORY = "repository";
         /// <summary>
         /// 
         /// </summary>
-        copied_from
+        public const string TIME_TRACKING = "time_tracking";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string WIKI = "wiki";
     }
 }

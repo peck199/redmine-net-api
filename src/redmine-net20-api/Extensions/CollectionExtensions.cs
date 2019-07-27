@@ -18,7 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// 
@@ -38,9 +38,9 @@ namespace Redmine.Net.Api.Extensions
                 return null;
             }
 
-            IList<T> clonedList = new List<T>();
+            var clonedList = new List<T>();
 
-            foreach (T item in listToClone)
+            foreach (var item in listToClone)
             {
                 clonedList.Add((T)item.Clone());
             }
@@ -57,7 +57,10 @@ namespace Redmine.Net.Api.Extensions
         /// <returns></returns>
         public static bool Equals<T>(this IList<T> list, IList<T> listToCompare) where T : class
         {
-            if (listToCompare == null) return false;
+            if (listToCompare == null)
+            {
+                return false;
+            }
 
 #if NET20
             if (list.Count != listToCompare.Count)
@@ -66,7 +69,7 @@ namespace Redmine.Net.Api.Extensions
             }
 
             var index = 0;
-            while (index < list.Count && (list[index] as T).Equals(listToCompare[index] as T))
+            while (index < list.Count && list[index].Equals(listToCompare[index]))
             {
                 index++;
             }
@@ -74,6 +77,7 @@ namespace Redmine.Net.Api.Extensions
             return index == list.Count;
 #else
             var set = new HashSet<T>(list);
+            
             var setToCompare = new HashSet<T>(listToCompare);
 
             return set.SetEquals(setToCompare);
@@ -88,7 +92,7 @@ namespace Redmine.Net.Api.Extensions
         {
             if (collection == null)
             {
-                return null;
+                return "NULL";
             }
 
             StringBuilder sb = new StringBuilder();

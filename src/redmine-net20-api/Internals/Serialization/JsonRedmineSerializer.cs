@@ -19,9 +19,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
-using Redmine.Net.Api;
-using Redmine.Net.Api.Exceptions;
-using Redmine.Net.Api.Extensions;
+using RedmineClient.Exceptions;
+using RedmineClient.Extensions;
 
 namespace RedmineClient.Internals.Serialization
 {

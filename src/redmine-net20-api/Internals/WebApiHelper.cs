@@ -17,10 +17,10 @@
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Types;
+using RedmineClient.Extensions;
+using RedmineClient.Types;
 
-namespace Redmine.Net.Api.Internals
+namespace RedmineClient.Internals
 {
     /// <summary>
     /// 

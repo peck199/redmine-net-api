@@ -15,23 +15,27 @@
 */
 
 using System;
+using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
+using RedmineClient.Internals.Serialization;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// Support for adding attachments through the REST API is added in Redmine 1.4.0.
     /// </summary>
     [XmlRoot(RedmineKeys.UPLOAD)]
-    public class Upload : IEquatable<Upload>
+    public sealed class Upload : IXmlSerializable, IJsonSerializable, IEquatable<Upload>
     {
+        #region Properties
         /// <summary>
         /// Gets or sets the uploaded token.
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement(RedmineKeys.TOKEN)]
         public string Token { get; set; }
 
         /// <summary>
@@ -39,29 +43,115 @@ namespace Redmine.Net.Api.Types
         /// Maximum allowed file size (1024000).
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement(RedmineKeys.FILENAME)]
         public string FileName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
         /// <value>The name of the file.</value>
-        [XmlElement(RedmineKeys.CONTENT_TYPE)]
         public string ContentType { get; set; }
 
         /// <summary>
         /// Gets or sets the file description. (Undocumented feature)
         /// </summary>
         /// <value>The file descroütopm.</value>
-        [XmlElement(RedmineKeys.DESCRIPTION)]
         public string Description { get; set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         public XmlSchema GetSchema() { return null; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadXml(XmlReader reader)
+        {
+            reader.Read();
+            while (!reader.EOF)
+            {
+                if (reader.IsEmptyElement && !reader.HasAttributes)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                switch (reader.Name)
+                {
+                    case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteElementString(RedmineKeys.TOKEN, Token);
+            writer.WriteElementString(RedmineKeys.CONTENT_TYPE, ContentType);
+            writer.WriteElementString(RedmineKeys.FILENAME, FileName);
+            writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
+        }
+        #endregion
+
+        #region Implementation of IJsonSerialization
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer)
+        {
+            writer.WriteProperty(RedmineKeys.TOKEN, Token);
+            writer.WriteProperty(RedmineKeys.CONTENT_TYPE, ContentType);
+            writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+            writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        public void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
+
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+                
+                switch(reader.Value)
+                {
+                    case RedmineKeys.CONTENT_TYPE:   ContentType = reader.ReadAsString();break;
+                    case    RedmineKeys.FILENAME:  FileName = reader.ReadAsString();break;
+                    case  RedmineKeys.TOKEN:    Token = reader.ReadAsString();break;
+                    case    RedmineKeys.DESCRIPTION:   Description = reader.ReadAsString();break;
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+       
+        #region Implementation of IEquatable<Upload>
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
@@ -107,6 +197,7 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion 
 
         /// <summary>
         /// 
@@ -114,7 +205,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Upload: Token={0}, FileName={1}, ContentType={2}, Description={3}]", Token, FileName, ContentType, Description);
+            return $"[Upload: Token={Token}, FileName={FileName}, ContentType={ContentType}, Description={Description}]";
         }
     }
 }

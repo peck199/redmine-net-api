@@ -16,9 +16,8 @@
 
 using System;
 using System.Net;
-using Redmine.Net.Api.Types;
 
-namespace Redmine.Net.Api
+namespace RedmineClient
 {
     /// <summary>
     /// </summary>

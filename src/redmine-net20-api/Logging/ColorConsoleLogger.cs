@@ -16,12 +16,12 @@
 
 using System;
 
-namespace Redmine.Net.Api.Logging
+namespace RedmineClient.Logging
 {
     /// <summary>
     /// 
     /// </summary>
-    /// <seealso cref="Redmine.Net.Api.Logging.ILogger" />
+    /// <seealso cref="ILogger" />
     public sealed class ColorConsoleLogger : ILogger
     {
         private static readonly object locker = new object();

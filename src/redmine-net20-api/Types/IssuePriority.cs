@@ -15,23 +15,27 @@
 */
 
 using System;
+using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// Availability 2.2
     /// </summary>
     [XmlRoot(RedmineKeys.ISSUE_PRIORITY)]
-    public class IssuePriority : IdentifiableName, IEquatable<IssuePriority>
+    public sealed class IssuePriority : IdentifiableName, IEquatable<IssuePriority>
     {
+        #region Properties
         /// <summary>
         /// 
         /// </summary>
-        [XmlElement(RedmineKeys.IS_DEFAULT)]
-        public bool IsDefault { get; set; }
+        public bool IsDefault { get; internal set; }
+        #endregion
 
         #region Implementation of IXmlSerializable
 
@@ -62,14 +66,41 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+        #endregion
+
+        #region Implementation of IJsonSerialization
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteXml(XmlWriter writer) { }
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
-        #endregion
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion 
 
         #region Implementation of IEquatable<IssuePriority>
         /// <summary>
@@ -112,6 +143,7 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
@@ -119,9 +151,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[IssuePriority: Id={0}, Name={1}, IsDefault={2}]", Id, Name, IsDefault);
+            return $"[IssuePriority: {base.ToString()}, IsDefault={IsDefault.ToString(CultureInfo.InvariantCulture)}]";
         }
-
-        #endregion
     }
 }

@@ -20,42 +20,51 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Internals;
-using Redmine.Net.Api.Types;
+using RedmineClient.Internals;
+using RedmineClient.Types;
 
-namespace Redmine.Net.Api.Extensions
+namespace RedmineClient.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    public static partial class XmlExtensions
+    internal static partial class XmlExtensions
     {
         /// <summary>
         /// Writes the id if not null.
         /// </summary>
         /// <param name="writer">The writer.</param>
-        /// <param name="ident">The ident.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteIdIfNotNull(this XmlWriter writer, IdentifiableName ident, string tag)
+        /// <param name="identifiableName">The ident.</param>
+        /// <param name="elementName">The tag.</param>
+        public static void WriteIdIfNotNull(this XmlWriter writer, string elementName, IdentifiableName identifiableName)
         {
-            if (ident != null) writer.WriteElementString(tag, ident.Id.ToString(CultureInfo.InvariantCulture));
+            if (identifiableName != null)
+            {
+                writer.WriteElementString(elementName, identifiableName.Id.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         /// <summary>
-        /// Writes the array.
+        ///     Writes the array.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="collection">The collection.</param>
         /// <param name="elementName">Name of the element.</param>
-        public static void WriteArray(this XmlWriter writer, IEnumerable collection, string elementName)
+        public static void WriteArray<T>(this XmlWriter writer, string elementName, IEnumerable<T> collection)
         {
-            if (collection == null) return;
+            if (collection == null)
+            {
+                return;
+            }
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
+            var serializer = new XmlSerializer(typeof(T));
+
             foreach (var item in collection)
             {
-                new XmlSerializer(item.GetType()).Serialize(writer, item);
+                serializer.Serialize(writer, item);
             }
 
             writer.WriteEndElement();
@@ -70,18 +79,24 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="type">The type.</param>
         /// <param name="f">The f.</param>
 #if NET20
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable collection, string elementName, Type type, Func<object, int> f)
+        public static void WriteArrayIds(this XmlWriter writer, string elementName, IEnumerable collection, Type type, Internals.Func<object, int> f)
 #else
-        public static void WriteArrayIds(this XmlWriter writer, IEnumerable collection, string elementName, Type type, System.Func<object, int> f)
+        public static void WriteArrayIds(this XmlWriter writer, string elementName, IEnumerable collection, Type type, System.Func<object, int> f)
 #endif
         {
-            if (collection == null) return;
+            if (collection == null)
+            {
+                return;
+            }
+
+            var serializer = new XmlSerializer(type);
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
             foreach (var item in collection)
             {
-                new XmlSerializer(type).Serialize(writer, f.Invoke(item));
+                serializer.Serialize(writer, f.Invoke(item).ToString(CultureInfo.InvariantCulture));
             }
 
             writer.WriteEndElement();
@@ -96,16 +111,21 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="type">The type.</param>
         /// <param name="root">The root.</param>
         /// <param name="defaultNamespace">The default namespace.</param>
-        public static void WriteArray(this XmlWriter writer, IEnumerable collection, string elementName, Type type, string root, string defaultNamespace = null)
+        public static void WriteArray(this XmlWriter writer, string elementName, IEnumerable collection, Type type, string root, string defaultNamespace = null)
         {
-            if (collection == null) return;
+            if (collection == null)
+            {
+                return;
+            }
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
+            var xmlSerializer = new XmlSerializer(type, new XmlAttributeOverrides(), new Type[] { }, new XmlRootAttribute(root), defaultNamespace);
+
             foreach (var item in collection)
             {
-                new XmlSerializer(type, new XmlAttributeOverrides(), new Type[] { }, new XmlRootAttribute(root),
-                    defaultNamespace).Serialize(writer, item);
+                xmlSerializer.Serialize(writer, item);
             }
 
             writer.WriteEndElement();
@@ -118,9 +138,17 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="collection">The collection.</param>
         /// <param name="elementName">Name of the element.</param>
         /// <param name="f">The func to invoke.</param>
-        public static void WriteArrayStringElement(this XmlWriter writer, IEnumerable collection, string elementName, Func<object, string> f)
+#if NET20
+        public static void WriteArrayStringElement(this XmlWriter writer, string elementName,IEnumerable collection, Internals.Func<object, string> f)
+#else
+        public static void WriteArrayStringElement(this XmlWriter writer, string elementName, IEnumerable collection, System.Func<object, string> f)
+#endif
         {
-            if (collection == null) return;
+            if (collection == null)
+            {
+                return;
+            }
+
             writer.WriteStartElement(elementName);
             writer.WriteAttributeString("type", "array");
 
@@ -128,6 +156,7 @@ namespace Redmine.Net.Api.Extensions
             {
                 writer.WriteElementString(elementName, f.Invoke(item));
             }
+
             writer.WriteEndElement();
         }
 
@@ -137,9 +166,12 @@ namespace Redmine.Net.Api.Extensions
         /// <param name="xmlWriter">The XML writer.</param>
         /// <param name="collection">The collection.</param>
         /// <param name="elementName">Name of the element.</param>
-        public static void WriteListElements(this XmlWriter xmlWriter, IEnumerable<IValue> collection, string elementName)
+        public static void WriteListElements(this XmlWriter xmlWriter, string elementName, IEnumerable<IValue> collection)
         {
-            if (collection == null) return;
+            if (collection == null)
+            {
+                return;
+            }
 
             foreach (var item in collection)
             {
@@ -148,14 +180,33 @@ namespace Redmine.Net.Api.Extensions
         }
 
         /// <summary>
-        /// Writes the identifier or empty.
+        /// 
         /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="ident">The ident.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteIdOrEmpty(this XmlWriter writer, IdentifiableName ident, string tag)
+        /// <param name="xmlWriter"></param>
+        /// <param name="elementName"></param>
+        /// <param name="collection"></param>
+        public static void WriteRepeatableElement(this XmlWriter xmlWriter, string elementName, IEnumerable<IValue> collection)
         {
-            writer.WriteElementString(tag, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
+            if (collection == null)
+            {
+                return;
+            }
+
+            foreach (var item in collection)
+            {
+                xmlWriter.WriteElementString(elementName, item.Value);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="elementName"></param>
+        /// <param name="ident"></param>
+        public static void WriteIdOrEmpty(this XmlWriter writer, string elementName, IdentifiableName ident)
+        {
+            writer.WriteElementString(elementName, ident != null ? ident.Id.ToString(CultureInfo.InvariantCulture) : string.Empty);
         }
 
         /// <summary>
@@ -163,13 +214,22 @@ namespace Redmine.Net.Api.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="writer">The writer.</param>
-        /// <param name="val">The value.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, T? val, string tag) where T : struct
+        /// <param name="value">The value.</param>
+        /// <param name="elementName">The tag.</param>
+        public static void WriteIfNotDefaultOrNull<T>(this XmlWriter writer, string elementName, T value)
         {
-            if (!val.HasValue) return;
-            if (!EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+            if (EqualityComparer<T>.Default.Equals(value, default(T)))
+            {
+                return;
+            }
+
+            if (value is bool)
+            {
+                writer.WriteElementString(elementName, value.ToString().ToLowerInvariant());
+                return;
+            }
+            
+            writer.WriteElementString(elementName, string.Format(CultureInfo.InvariantCulture, "{0}", value.ToString()));
         }
 
         /// <summary>
@@ -178,27 +238,36 @@ namespace Redmine.Net.Api.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="writer">The writer.</param>
         /// <param name="val">The value.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteValueOrEmpty<T>(this XmlWriter writer, T? val, string tag) where T : struct
+        /// <param name="elementName">The tag.</param>
+        public static void WriteValueOrEmpty<T>(this XmlWriter writer, string elementName, T? val) where T : struct
         {
             if (!val.HasValue || EqualityComparer<T>.Default.Equals(val.Value, default(T)))
-                writer.WriteElementString(tag, string.Empty);
+            {
+                writer.WriteElementString(elementName, string.Empty);
+            }
             else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+            {
+                writer.WriteElementString(elementName, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value));
+            }
         }
 
         /// <summary>
         /// Writes the date or empty.
         /// </summary>
         /// <param name="writer">The writer.</param>
+        /// <param name="elementName">The tag.</param>
         /// <param name="val">The value.</param>
-        /// <param name="tag">The tag.</param>
-        public static void WriteDateOrEmpty(this XmlWriter writer, DateTime? val, string tag)
+        /// <param name="dateTimeFormat"></param>
+        public static void WriteDateOrEmpty(this XmlWriter writer,  string elementName, DateTime? val, string dateTimeFormat = "yyyy-MM-dd")
         {
             if (!val.HasValue || val.Value.Equals(default(DateTime)))
-                writer.WriteElementString(tag, string.Empty);
+            {
+                writer.WriteElementString(elementName, string.Empty);
+            }
             else
-                writer.WriteElementString(tag, string.Format(NumberFormatInfo.InvariantInfo, "{0}", val.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)));
+            {
+                writer.WriteElementString(elementName,  val.Value.ToString(dateTimeFormat, CultureInfo.InvariantCulture));
+            }
         }
     }
 }

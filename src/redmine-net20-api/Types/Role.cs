@@ -18,27 +18,29 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
-using Redmine.Net.Api.Extensions;
-using Redmine.Net.Api.Internals;
+using Newtonsoft.Json;
+using RedmineClient.Extensions;
+using RedmineClient.Internals;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient.Types
 {
     /// <summary>
     /// Availability 1.4
     /// </summary>
     [XmlRoot(RedmineKeys.ROLE)]
-    public class Role : IdentifiableName, IEquatable<Role>
+    public sealed class Role : IdentifiableName, IEquatable<Role>
     {
+        #region Properties
         /// <summary>
-        /// Gets or sets the permissions.
+        /// Gets the permissions.
         /// </summary>
         /// <value>
         /// The issue relations.
         /// </value>
-        [XmlArray(RedmineKeys.PERMISSIONS)]
-        [XmlArrayItem(RedmineKeys.PERMISSION)]
-        public IList<Permission> Permissions { get; set; }
+        public IList<Permission> Permissions { get; internal set; }
+        #endregion
 
+        #region Implementation of IXmlSerialization
         /// <summary>
         /// 
         /// </summary>
@@ -66,13 +68,43 @@ namespace Redmine.Net.Api.Types
                 }
             }
         }
+        #endregion
+
+        #region Implementation of IJsonSerialization
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteXml(XmlWriter writer) { }
+        /// <param name="reader"></param>
+        public override void ReadJson(JsonReader reader)
+        {
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonToken.EndObject)
+                {
+                    return;
+                }
 
+                if (reader.TokenType != JsonToken.PropertyName)
+                {
+                    continue;
+                }
+
+                switch (reader.Value)
+                {
+                    case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
+
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+
+                    case RedmineKeys.PERMISSIONS: Permissions = reader.ReadAsCollection<Permission>(); break;
+
+                    default: reader.Read(); break;
+                }
+            }
+        }
+        #endregion
+      
+        #region Implementation of IEquatable<Role>
         /// <summary>
         /// 
         /// </summary>
@@ -112,6 +144,7 @@ namespace Redmine.Net.Api.Types
                 return hashCode;
             }
         }
+        #endregion
 
         /// <summary>
         /// 
@@ -119,7 +152,7 @@ namespace Redmine.Net.Api.Types
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("[Role: Id={0}, Name={1}, Permissions={2}]", Id, Name, Permissions);
+            return $"[{nameof(Role)}: {base.ToString()}, Permissions={Permissions}]";
         }
     }
 }

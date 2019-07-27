@@ -19,7 +19,7 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Net.Cache;
 
-namespace Redmine.Net.Api.Types
+namespace RedmineClient
 {
     /// <summary>
     /// 

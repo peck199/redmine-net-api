@@ -17,7 +17,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Redmine.Net.Api.Logging
+namespace RedmineClient.Logging
 {
     /// <summary>
     /// 
