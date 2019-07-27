@@ -27,9 +27,7 @@ namespace RedmineClient.Types
         /// <summary>
         /// 
         /// </summary>
-        public ProjectIssueCategory()
-        {
-        }
+        public ProjectIssueCategory(){}
 
         internal ProjectIssueCategory(int id, string name)
         {

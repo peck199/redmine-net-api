@@ -63,13 +63,9 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadElementContentAsNullableInt(); break;
-
                     default: reader.Read(); break;
                 }
             }
@@ -99,13 +95,9 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
                     case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.PROJECT_ID: ProjectId = reader.ReadAsInt32(); break;
-
                     default: reader.Read(); break;
                 }
             }

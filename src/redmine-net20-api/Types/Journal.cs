@@ -58,7 +58,7 @@ namespace RedmineClient.Types
         /// <summary>
         /// 
         /// </summary>
-        public bool PrivateNotes { get;  internal set; }
+        public bool PrivateNotes { get; internal set; }
 
         /// <summary>
         /// Gets or sets the details.
@@ -89,24 +89,19 @@ namespace RedmineClient.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.NOTES: Notes = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadElementContentAsBoolean(); break;
-
                     case RedmineKeys.DETAILS: Details = reader.ReadElementContentAsCollection<Detail>(); break;
-
+                    case RedmineKeys.NOTES: Notes = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
         }
         #endregion
-        
+
         #region Implementation of IJsonSerialization
-      
+
 
         /// <summary>
         /// 
@@ -129,21 +124,17 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.NOTES: Notes = reader.ReadAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-
                     case RedmineKeys.DETAILS: Details = reader.ReadAsCollection<Detail>(); break;
-
+                    case RedmineKeys.NOTES: Notes = reader.ReadAsString(); break;
+                    case RedmineKeys.PRIVATE_NOTES: PrivateNotes = reader.ReadAsBool(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
         }
         #endregion
-       
+
         #region Implementation of IEquatable<Journal>
         /// <summary>
         /// 
@@ -157,7 +148,7 @@ namespace RedmineClient.Types
                 && User == other.User
                 && Notes == other.Notes
                 && CreatedOn == other.CreatedOn
-                && (Details != null ? Details.Equals<Detail>(other.Details) : other.Details == null );
+                && (Details != null ? Details.Equals<Detail>(other.Details) : other.Details == null);
         }
 
         /// <summary>
@@ -178,7 +169,7 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>

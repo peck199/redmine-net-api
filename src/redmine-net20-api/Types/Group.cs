@@ -83,15 +83,10 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.USERS: Users = reader.ReadElementContentAsCollection<GroupUser>(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.USERS: Users = reader.ReadElementContentAsCollection<GroupUser>(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -132,15 +127,10 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
-                    case RedmineKeys.USERS: Users = reader.ReadAsCollection<GroupUser>(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
-
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.USERS: Users = reader.ReadAsCollection<GroupUser>(); break;
                     default: reader.Read(); break;
                 }
             }

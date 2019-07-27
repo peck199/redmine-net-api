@@ -85,15 +85,10 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
                     case RedmineKeys.GROUP: Group = new IdentifiableName(reader); break;
-
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
-
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -106,24 +101,11 @@ namespace RedmineClient.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
-            writer.WriteArray( RedmineKeys.ROLE_IDS, Roles, typeof(MembershipRole), RedmineKeys.ROLE_ID);
+            writer.WriteArray(RedmineKeys.ROLE_IDS, Roles, typeof(MembershipRole), RedmineKeys.ROLE_ID);
         }
         #endregion
 
         #region Implementation of IJsonSerialization
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteJson(JsonWriter writer)
-        {
-            using(new JsonObject(writer, RedmineKeys.MEMBERSHIP))
-            {
-                writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
-                writer.WriteRepeatableElement(RedmineKeys.ROLE_IDS, (IEnumerable<IValue>)Roles);
-            }
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -145,17 +127,25 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
                     case RedmineKeys.GROUP: Group = new IdentifiableName(reader); break;
-
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<MembershipRole>(); break;
-
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.MEMBERSHIP))
+            {
+                writer.WriteIdIfNotNull(RedmineKeys.USER_ID, User);
+                writer.WriteRepeatableElement(RedmineKeys.ROLE_IDS, (IEnumerable<IValue>)Roles);
             }
         }
         #endregion
@@ -193,7 +183,7 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>

@@ -65,13 +65,9 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
-
                     case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadElementContentAsBoolean(); break;
-
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -100,13 +96,9 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
-                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
-
                     case RedmineKeys.IS_CLOSED: IsClosed = reader.ReadAsBool(); break;
-
+                    case RedmineKeys.IS_DEFAULT: IsDefault = reader.ReadAsBool(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     default: reader.Read(); break;
                 }
             }

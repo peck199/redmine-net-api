@@ -75,13 +75,9 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
                     case RedmineKeys.ASSIGNED_TO: AssignTo = new IdentifiableName(reader); break;
-
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -121,13 +117,9 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
                     case RedmineKeys.ASSIGNED_TO: AssignTo = new IdentifiableName(reader); break;
-
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }

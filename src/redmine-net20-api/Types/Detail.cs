@@ -90,8 +90,8 @@ namespace RedmineClient.Types
         /// <param name="reader"></param>
         public void ReadXml(XmlReader reader)
         {
-            Property = reader.GetAttribute(RedmineKeys.PROPERTY);
             Name = reader.GetAttribute(RedmineKeys.NAME);
+            Property = reader.GetAttribute(RedmineKeys.PROPERTY);
 
             reader.Read();
 
@@ -105,9 +105,9 @@ namespace RedmineClient.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.NEW_VALUE: NewValue = reader.ReadElementContentAsString(); break;
+
+                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadElementContentAsString(); break;
 
                     default: reader.Read(); break;
                 }
@@ -148,13 +148,13 @@ namespace RedmineClient.Types
 
                 switch (reader.Value)
                 {
-                    case RedmineKeys.PROPERTY: Property = reader.ReadAsString(); break;
-
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
 
-                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadAsString(); break;
+                    case RedmineKeys.PROPERTY: Property = reader.ReadAsString(); break;
 
                     case RedmineKeys.NEW_VALUE: NewValue = reader.ReadAsString(); break;
+
+                    case RedmineKeys.OLD_VALUE: OldValue = reader.ReadAsString(); break;
 
                     default: reader.Read(); break;
                 }

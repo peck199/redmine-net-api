@@ -101,10 +101,15 @@ namespace RedmineClient.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
-            if (Values == null) return;
+            if (Values == null)
+            {
+                return;
+            }
+
             var itemsCount = Values.Count;
 
             writer.WriteAttributeString(RedmineKeys.ID, Id.ToString(CultureInfo.InvariantCulture));
+
             if (itemsCount > 1)
             {
                 writer.WriteArrayStringElement(RedmineKeys.VALUE, Values, GetValue);
@@ -169,21 +174,14 @@ namespace RedmineClient.Types
 
                 switch (reader.Value)
                 {
-                    case RedmineKeys.ID:
-                        Id = reader.ReadAsInt();
-                        break;
-                    case RedmineKeys.NAME:
-                        Name = reader.ReadAsString();
-                        break;
-                    case RedmineKeys.MULTIPLE:
-                        Multiple = reader.ReadAsBool();
-                        break;
+                    case RedmineKeys.ID:Id = reader.ReadAsInt();break;
+                    case RedmineKeys.MULTIPLE:Multiple = reader.ReadAsBool();break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString();break;
                     case RedmineKeys.VALUE:
                         reader.Read();
                         switch (reader.TokenType)
                         {
-                            case JsonToken.Null:
-                                break;
+                            case JsonToken.Null:break;
                             case JsonToken.StartArray:
                                 Values = reader.ReadAsArray<CustomFieldValue>();
                                 break;
@@ -192,8 +190,6 @@ namespace RedmineClient.Types
                                 break;
                         }
                         break;
-
-                    default: break;
                 }
             }
         }

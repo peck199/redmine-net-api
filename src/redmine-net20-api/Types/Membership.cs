@@ -63,11 +63,8 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
                     case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<MembershipRole>(); break;
-
                     default: reader.Read(); break;
                 }
             }
@@ -96,11 +93,8 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
                     case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
                     case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<MembershipRole>(); break;
-
                     default: reader.Read(); break;
                 }
             }

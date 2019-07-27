@@ -109,21 +109,19 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.FILENAME: Filename = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
-                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
-                    case RedmineKeys.VERSION_ID: Version = new IdentifiableName() { Id = reader.ReadElementContentAsInt() }; break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DIGEST: Digest = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.DOWNLOADS: Downloads = reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.FILENAME: Filename = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
-                    default:
-                        reader.Read();
-                        break;
+                    case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
+                    case RedmineKeys.VERSION_ID: Version = new IdentifiableName() { Id = reader.ReadElementContentAsInt() }; break;
+                    default: reader.Read(); break;
                 }
             }
         }
@@ -163,18 +161,18 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt32().GetValueOrDefault(); break;
-                    case RedmineKeys.FILENAME: Filename = reader.ReadAsString(); break;
-                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt32().GetValueOrDefault(); break;
-                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
-                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadAsString(); break;
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
+                    case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-                    case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
-                    case RedmineKeys.VERSION_ID: Version = new IdentifiableName() { Id = reader.ReadAsInt32().GetValueOrDefault() }; break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.DIGEST: Digest = reader.ReadAsString(); break;
                     case RedmineKeys.DOWNLOADS: Downloads = reader.ReadAsInt32().GetValueOrDefault(); break;
+                    case RedmineKeys.FILENAME: Filename = reader.ReadAsString(); break;
+                    case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt32().GetValueOrDefault(); break;
                     case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
+                    case RedmineKeys.VERSION: Version = new IdentifiableName(reader); break;
+                    case RedmineKeys.VERSION_ID: Version = new IdentifiableName() { Id = reader.ReadAsInt32().GetValueOrDefault() }; break;
                     default: reader.Read(); break;
                 }
             }

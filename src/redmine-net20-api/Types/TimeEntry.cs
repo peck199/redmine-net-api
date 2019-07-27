@@ -64,7 +64,7 @@ namespace RedmineClient.Types
         public IdentifiableName Activity { get; set; }
 
         /// <summary>
-        /// Gets or sets the user.
+        /// Gets the user.
         /// </summary>
         /// <value>
         /// The user.
@@ -77,21 +77,18 @@ namespace RedmineClient.Types
         /// <value>The comments.</value>
         public string Comments
         {
-            get { return comments; }
-            set
-            {
-                comments = value.Truncate(255);
-            }
+            get => comments;
+            set => comments = value.Truncate(255);
         }
 
         /// <summary>
-        /// Gets or sets the created on.
+        /// Gets the created on.
         /// </summary>
         /// <value>The created on.</value>
         public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the updated on.
+        /// Gets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
         public DateTime? UpdatedOn { get; internal set; }
@@ -122,33 +119,19 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.HOURS: Hours = reader.ReadElementContentAsDecimal(); break;
-
-                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
-
                     case RedmineKeys.ACTIVITY: Activity = new IdentifiableName(reader); break;
-
+                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
                     case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
+                    case RedmineKeys.HOURS: Hours = reader.ReadElementContentAsDecimal(); break;
+                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -192,33 +175,19 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadAsDateTime(); break;
-
-                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.HOURS: Hours = reader.ReadAsDecimal().GetValueOrDefault(); break;
-
-                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
-
                     case RedmineKeys.ACTIVITY: Activity = new IdentifiableName(reader); break;
-
+                    case RedmineKeys.ACTIVITY_ID: Activity = new IdentifiableName(reader); break;
                     case RedmineKeys.COMMENTS: Comments = reader.ReadAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
-
+                    case RedmineKeys.HOURS: Hours = reader.ReadAsDecimal().GetValueOrDefault(); break;
+                    case RedmineKeys.ISSUE: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.ISSUE_ID: Issue = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.PROJECT_ID: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SPENT_ON: SpentOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.USER: User = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }

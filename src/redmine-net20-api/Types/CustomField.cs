@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace RedmineClient.Types
     /// <summary>
     /// 
     /// </summary>
+    [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     [XmlRoot(RedmineKeys.CUSTOM_FIELD)]
     public sealed class CustomField : IdentifiableName, IEquatable<CustomField>
     {
@@ -122,37 +124,21 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.REGEXP: Regexp = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.MIN_LENGTH: MinLength = reader.ReadElementContentAsNullableInt(); break;
-
-                    case RedmineKeys.MAX_LENGTH: MaxLength = reader.ReadElementContentAsNullableInt(); break;
-
-                    case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadElementContentAsBoolean(); break;
-
-                    case RedmineKeys.IS_FILTER: IsFilter = reader.ReadElementContentAsBoolean(); break;
-
-                    case RedmineKeys.SEARCHABLE: Searchable = reader.ReadElementContentAsBoolean(); break;
-
-                    case RedmineKeys.VISIBLE: Visible = reader.ReadElementContentAsBoolean(); break;
-
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadElementContentAsString(); break;
-
+                    case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.IS_FILTER: IsFilter = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.MAX_LENGTH: MaxLength = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.MIN_LENGTH: MinLength = reader.ReadElementContentAsNullableInt(); break;
                     case RedmineKeys.MULTIPLE: Multiple = reader.ReadElementContentAsBoolean(); break;
-
-                    case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<TrackerCustomField>(); break;
-
-                    case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<CustomFieldRole>(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.POSSIBLE_VALUES: PossibleValues = reader.ReadElementContentAsCollection<CustomFieldPossibleValue>(); break;
-
+                    case RedmineKeys.REGEXP: Regexp = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.ROLES: Roles = reader.ReadElementContentAsCollection<CustomFieldRole>(); break;
+                    case RedmineKeys.SEARCHABLE: Searchable = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<TrackerCustomField>(); break;
+                    case RedmineKeys.VISIBLE: Visible = reader.ReadElementContentAsBoolean(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -182,37 +168,21 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
                     case RedmineKeys.CUSTOMIZED_TYPE: CustomizedType = reader.ReadAsString(); break;
-
-                    case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadAsString(); break;
-
-                    case RedmineKeys.REGEXP: Regexp = reader.ReadAsString(); break;
-
-                    case RedmineKeys.MIN_LENGTH: MinLength = reader.ReadAsInt32(); break;
-
-                    case RedmineKeys.MAX_LENGTH: MaxLength = reader.ReadAsInt32(); break;
-
-                    case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadAsBool(); break;
-
-                    case RedmineKeys.IS_FILTER: IsFilter = reader.ReadAsBool(); break;
-
-                    case RedmineKeys.SEARCHABLE: Searchable = reader.ReadAsBool(); break;
-
-                    case RedmineKeys.VISIBLE: Visible = reader.ReadAsBool(); break;
-
                     case RedmineKeys.DEFAULT_VALUE: DefaultValue = reader.ReadAsString(); break;
-
+                    case RedmineKeys.FIELD_FORMAT: FieldFormat = reader.ReadAsString(); break;
+                    case RedmineKeys.IS_FILTER: IsFilter = reader.ReadAsBool(); break;
+                    case RedmineKeys.IS_REQUIRED: IsRequired = reader.ReadAsBool(); break;
+                    case RedmineKeys.MAX_LENGTH: MaxLength = reader.ReadAsInt32(); break;
+                    case RedmineKeys.MIN_LENGTH: MinLength = reader.ReadAsInt32(); break;
                     case RedmineKeys.MULTIPLE: Multiple = reader.ReadAsBool(); break;
-
-                    case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<TrackerCustomField>(); break;
-
-                    case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<CustomFieldRole>(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     case RedmineKeys.POSSIBLE_VALUES: PossibleValues = reader.ReadAsCollection<CustomFieldPossibleValue>(); break;
-
+                    case RedmineKeys.REGEXP: Regexp = reader.ReadAsString(); break;
+                    case RedmineKeys.ROLES: Roles = reader.ReadAsCollection<CustomFieldRole>(); break;
+                    case RedmineKeys.SEARCHABLE: Searchable = reader.ReadAsBool(); break;
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<TrackerCustomField>(); break;
+                    case RedmineKeys.VISIBLE: Visible = reader.ReadAsBool(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -314,5 +284,22 @@ namespace RedmineClient.Types
 , Trackers={Trackers.Dump()}
 , Roles={Roles.Dump()}]";
         }
+
+        private string DebuggerDisplay =>
+            $@"[{nameof(CustomField)}: {base.ToString()}
+, CustomizedType={CustomizedType}
+, FieldFormat={FieldFormat}
+, Regexp={Regexp}
+, MinLength={MinLength?.ToString(CultureInfo.InvariantCulture)}
+, MaxLength={MaxLength?.ToString(CultureInfo.InvariantCulture)}
+, IsRequired={IsRequired.ToString()}
+, IsFilter={IsFilter.ToString()}
+, Searchable={Searchable.ToString()}
+, Multiple={Multiple.ToString()}
+, DefaultValue={DefaultValue}
+, Visible={Visible.ToString()}
+, PossibleValues={PossibleValues.Dump()}
+, Trackers={Trackers.Dump()}
+, Roles={Roles.Dump()}]";
     }
 }

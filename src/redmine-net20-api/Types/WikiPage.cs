@@ -107,23 +107,14 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.TEXT: Text = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.VERSION: Version = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
                     case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadElementContentAsCollection<Attachment>(); break;
-
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.TEXT: Text = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.VERSION: Version = reader.ReadElementContentAsInt(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -165,23 +156,14 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
-
-                    case RedmineKeys.TEXT: Text = reader.ReadAsString(); break;
-
-                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsString(); break;
-
-                    case RedmineKeys.VERSION: Version = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
-
                     case RedmineKeys.ATTACHMENTS: Attachments = reader.ReadAsCollection<Attachment>(); break;
-
+                    case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
+                    case RedmineKeys.COMMENTS: Comments = reader.ReadAsString(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.TEXT: Text = reader.ReadAsString(); break;
+                    case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.VERSION: Version = reader.ReadAsInt(); break;
                     default: reader.Read(); break;
                 }
             }

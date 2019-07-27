@@ -50,16 +50,20 @@ namespace RedmineClient.Types
             Id = trackerId;
         }
 
+        #region Implementation of IValue
+
         /// <summary>
         /// 
         /// </summary>
-		public string Value => Id.ToString();
+        public string Value => Id.ToString();
+
+        #endregion
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-		public override string ToString()
+        public override string ToString()
         {
             return $"[{nameof(ProjectTracker)}: {base.ToString()}]";
         }

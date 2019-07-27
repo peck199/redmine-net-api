@@ -86,25 +86,18 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.SUMMARY: Summary = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SUMMARY: Summary = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.TITLE: Title = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
             }
         }
         #endregion
-        
+
         #region Implementation of IJsonSerialization
         /// <summary>
         /// 
@@ -127,19 +120,12 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
                     case RedmineKeys.AUTHOR: Author = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
-
-                    case RedmineKeys.SUMMARY: Summary = reader.ReadAsString(); break;
-
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SUMMARY: Summary = reader.ReadAsString(); break;
+                    case RedmineKeys.TITLE: Title = reader.ReadAsString(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -163,7 +149,7 @@ namespace RedmineClient.Types
                 && Description == other.Description
                 && CreatedOn == other.CreatedOn);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -183,7 +169,7 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>

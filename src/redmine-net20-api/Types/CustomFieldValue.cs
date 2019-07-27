@@ -33,9 +33,7 @@ namespace RedmineClient.Types
         /// <summary>
         /// 
         /// </summary>
-        public CustomFieldValue()
-        {
-        }
+        public CustomFieldValue(){}
 
         /// <summary>
         /// 

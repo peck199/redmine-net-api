@@ -26,7 +26,7 @@ namespace RedmineClient.Types
     [XmlRoot(RedmineKeys.USER)]
     public sealed class Watcher : IdentifiableName, IValue, ICloneable
     {
-        #region IValue implementation
+        #region Implementation of IValue 
         /// <summary>
         /// 
         /// </summary>

@@ -98,28 +98,16 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadElementContentAsString(), true); break;
-
-                    case RedmineKeys.DUE_DATE: DueDate = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadElementContentAsString(), true); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-                    
-                    default:
-                        reader.Read();
-                        break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.DUE_DATE: DueDate = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadElementContentAsString(), true); break;
+                    case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadElementContentAsString(), true); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    default: reader.Read(); break;
                 }
             }
         }
@@ -133,11 +121,11 @@ namespace RedmineClient.Types
             writer.WriteElementString(RedmineKeys.NAME, Name);
             writer.WriteElementString(RedmineKeys.STATUS, Status.ToString().ToLowerInvariant());
             writer.WriteElementString(RedmineKeys.SHARING, Sharing.ToString().ToLowerInvariant());
-            writer.WriteDateOrEmpty( RedmineKeys.DUE_DATE, DueDate);
+            writer.WriteDateOrEmpty(RedmineKeys.DUE_DATE, DueDate);
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
         }
         #endregion
-        
+
         #region Implementation of IJsonSerialization
         /// <summary>
         /// 
@@ -160,25 +148,15 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
-                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
-
-                    case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadAsString(), true); break;
-
-                    case RedmineKeys.DUE_DATE: DueDate = reader.ReadAsDateTime(); break;
-
-                    case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadAsString(), true); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
-
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.DUE_DATE: DueDate = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.PROJECT: Project = new IdentifiableName(reader); break;
+                    case RedmineKeys.SHARING: Sharing = (VersionSharing)Enum.Parse(typeof(VersionSharing), reader.ReadAsString(), true); break;
+                    case RedmineKeys.STATUS: Status = (VersionStatus)Enum.Parse(typeof(VersionStatus), reader.ReadAsString(), true); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsDateTime(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -241,7 +219,7 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-      
+
         /// <summary>
         /// 
         /// </summary>

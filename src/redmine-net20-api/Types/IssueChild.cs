@@ -64,10 +64,8 @@ namespace RedmineClient.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
-
                     case RedmineKeys.SUBJECT: Subject = reader.ReadElementContentAsString(); break;
-
+                    case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }
@@ -96,11 +94,8 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
-
                     case RedmineKeys.SUBJECT: Subject = reader.ReadAsString(); break;
-
+                    case RedmineKeys.TRACKER: Tracker = new IdentifiableName(reader); break;
                     default: reader.Read(); break;
                 }
             }

@@ -47,9 +47,9 @@ namespace RedmineClient.Types
         /// <param name="reader">The reader.</param>
         public override void ReadXml(XmlReader reader)
         {
-            Id = Convert.ToInt32(reader.GetAttribute(RedmineKeys.ID));
-            Name = reader.GetAttribute(RedmineKeys.NAME);
+            Id = reader.ReadAttributeAsInt(RedmineKeys.ID);
             Inherited = reader.ReadAttributeAsBoolean(RedmineKeys.INHERITED);
+            Name = reader.GetAttribute(RedmineKeys.NAME);
             reader.Read();
         }
 
@@ -85,11 +85,8 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
                     case RedmineKeys.INHERITED: Inherited = reader.ReadAsBool(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
                     default: reader.Read(); break;
                 }
             }

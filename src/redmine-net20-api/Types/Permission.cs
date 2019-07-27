@@ -43,7 +43,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <returns></returns>
-        public XmlSchema GetSchema(){return null;}
+        public XmlSchema GetSchema() { return null; }
 
         /// <summary>
         /// 
@@ -63,7 +63,6 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.PERMISSION: Info = reader.ReadElementContentAsString(); break;
-
                     default: reader.Read(); break;
                 }
             }
@@ -73,10 +72,7 @@ namespace RedmineClient.Types
         /// 
         /// </summary>
         /// <param name="writer"></param>
-        public void WriteXml(XmlWriter writer)
-        {
-            
-        }
+        public void WriteXml(XmlWriter writer) { }
 
         #endregion
 
@@ -102,7 +98,6 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.PERMISSION: Info = reader.ReadAsString(); break;
-
                     default: reader.Read(); break;
                 }
             }
@@ -153,7 +148,7 @@ namespace RedmineClient.Types
             }
         }
         #endregion
-        
+
         /// <summary>
         /// 
         /// </summary>

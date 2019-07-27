@@ -49,9 +49,7 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
                     case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
                     default: reader.Read(); break;
                 }
             }
@@ -81,9 +79,7 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
                     case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
                     default: reader.Read(); break;
                 }
             }

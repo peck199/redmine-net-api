@@ -82,14 +82,10 @@ namespace RedmineClient.Types
 
                 switch (reader.Name)
                 {
-                    case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
-
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-
+                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.TOKEN: Token = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -112,18 +108,6 @@ namespace RedmineClient.Types
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="writer"></param>
-        public void WriteJson(JsonWriter writer)
-        {
-            writer.WriteProperty(RedmineKeys.TOKEN, Token);
-            writer.WriteProperty(RedmineKeys.CONTENT_TYPE, ContentType);
-            writer.WriteProperty(RedmineKeys.FILENAME, FileName);
-            writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="reader"></param>
         public void ReadJson(JsonReader reader)
         {
@@ -138,19 +122,31 @@ namespace RedmineClient.Types
                 {
                     continue;
                 }
-                
-                switch(reader.Value)
+
+                switch (reader.Value)
                 {
-                    case RedmineKeys.CONTENT_TYPE:   ContentType = reader.ReadAsString();break;
-                    case    RedmineKeys.FILENAME:  FileName = reader.ReadAsString();break;
-                    case  RedmineKeys.TOKEN:    Token = reader.ReadAsString();break;
-                    case    RedmineKeys.DESCRIPTION:   Description = reader.ReadAsString();break;
+                    case RedmineKeys.CONTENT_TYPE: ContentType = reader.ReadAsString(); break;
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
+                    case RedmineKeys.FILENAME: FileName = reader.ReadAsString(); break;
+                    case RedmineKeys.TOKEN: Token = reader.ReadAsString(); break;
                     default: reader.Read(); break;
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public void WriteJson(JsonWriter writer)
+        {
+            writer.WriteProperty(RedmineKeys.TOKEN, Token);
+            writer.WriteProperty(RedmineKeys.CONTENT_TYPE, ContentType);
+            writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+            writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
+        }
         #endregion
-       
+
         #region Implementation of IEquatable<Upload>
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.

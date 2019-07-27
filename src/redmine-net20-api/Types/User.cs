@@ -147,35 +147,20 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.LASTNAME: LastName = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
-
-                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
-
-                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
-
+                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadElementContentAsNullableInt(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
-                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
-
+                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.GROUPS: Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
-
+                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
+                    case RedmineKeys.LASTNAME: LastName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
+                    case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -222,35 +207,20 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.LOGIN: Login = reader.ReadAsString(); break;
-
-                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadAsString(); break;
-
-                    case RedmineKeys.LASTNAME: LastName = reader.ReadAsString(); break;
-
-                    case RedmineKeys.MAIL: Email = reader.ReadAsString(); break;
-
-                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadAsString(); break;
-
-                    case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadAsBool(); break;
-
-                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadAsInt32(); break;
-
-                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadAsDateTime(); break;
-
-                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
-
                     case RedmineKeys.API_KEY: ApiKey = reader.ReadAsString(); break;
-
-                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadAsInt(); break;
-
+                    case RedmineKeys.AUTH_SOURCE_ID: AuthenticationModeId = reader.ReadAsInt32(); break;
+                    case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
-
-                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
-
+                    case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadAsDateTime(); break;
+                    case RedmineKeys.LASTNAME: LastName = reader.ReadAsString(); break;
+                    case RedmineKeys.LOGIN: Login = reader.ReadAsString(); break;
+                    case RedmineKeys.FIRSTNAME: FirstName = reader.ReadAsString(); break;
                     case RedmineKeys.GROUPS: Groups = reader.ReadAsCollection<UserGroup>(); break;
-
+                    case RedmineKeys.MAIL: Email = reader.ReadAsString(); break;
+                    case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadAsString(); break;
+                    case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
+                    case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadAsBool(); break;
+                    case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadAsInt(); break;
                     default: reader.Read(); break;
                 }
             }

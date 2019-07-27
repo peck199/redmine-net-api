@@ -33,8 +33,9 @@ namespace RedmineClient.Types
     {
         #region Properties
         /// <summary>
-        /// Gets or sets the identifier (Required).
+        /// Gets or sets the identifier.
         /// </summary>
+        /// <remarks>Required for create</remarks>
         /// <value>The identifier.</value>
         public string Identifier { get; set; }
 
@@ -57,19 +58,19 @@ namespace RedmineClient.Types
         public string HomePage { get; set; }
 
         /// <summary>
-        /// Gets or sets the created on.
+        /// Gets the created on.
         /// </summary>
         /// <value>The created on.</value>
         public DateTime? CreatedOn { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the updated on.
+        /// Gets the updated on.
         /// </summary>
         /// <value>The updated on.</value>
         public DateTime? UpdatedOn { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the status.
+        /// Gets the status.
         /// </summary>
         /// <value>
         /// The status.
@@ -82,7 +83,7 @@ namespace RedmineClient.Types
         /// <value>
         ///   <c>true</c> if this project is public; otherwise, <c>false</c>.
         /// </value>
-        /// <remarks> is exposed since 2.6.0</remarks>
+        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
         public bool IsPublic { get; set; }
 
         /// <summary>
@@ -94,23 +95,25 @@ namespace RedmineClient.Types
         public bool InheritMembers { get; set; }
 
         /// <summary>
-        /// since 2.6.0 Gets or sets the trackers.
+        /// Gets or sets the trackers.
         /// </summary>
         /// <value>
         /// The trackers.
         /// </value>
+        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
         public IList<ProjectTracker> Trackers { get; set; }
 
         /// <summary>
-        /// since 2.6.0
+        /// Gets or sets the enabled modules.
         /// </summary>
         /// <value>
         /// The enabled modules.
         /// </value>
+        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
-        /// Gets or sets the custom fields.
+        /// Gets the custom fields.
         /// </summary>
         /// <value>
         /// The custom fields.
@@ -118,16 +121,18 @@ namespace RedmineClient.Types
         public IList<IssueCustomField> CustomFields { get; internal set; }
 
         /// <summary>
-        /// since 2.6.0 Gets or sets the issue categories.
+        /// Gets the issue categories.
         /// </summary>
         /// <value>
         /// The issue categories.
         /// </value>
+        /// <remarks>Available in Redmine starting with 2.6.0 version.</remarks>
         public IList<ProjectIssueCategory> IssueCategories { get; internal set; }
 
         /// <summary>
-        /// since 3.4.0
+        /// Gets the time entry activities.
         /// </summary>
+        /// <remarks>Available in Redmine starting with 3.4.0 version.</remarks>
         public IList<ProjectTimeEntryActivity> TimeEntryActivities { get; internal set; }
         #endregion
 
@@ -150,37 +155,21 @@ namespace RedmineClient.Types
                 switch (reader.Name)
                 {
                     case RedmineKeys.ID: Id = reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.IDENTIFIER: Identifier = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadElementContentAsInt(); break;
-
-                    case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.HOMEPAGE: HomePage = reader.ReadElementContentAsString(); break;
-
-                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
-
-                    case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadElementContentAsBoolean(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
-
-                    case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadElementContentAsCollection<IssueCustomField>(); break;
-
-                    case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
-
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadElementContentAsCollection<ProjectEnabledModule>(); break;
-
+                    case RedmineKeys.HOMEPAGE: HomePage = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.IDENTIFIER: Identifier = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadElementContentAsBoolean(); break;
+                    case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadElementContentAsCollection<ProjectIssueCategory>(); break;
+                    case RedmineKeys.NAME: Name = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
+                    case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadElementContentAsCollection<ProjectTimeEntryActivity>(); break;
-
+                    case RedmineKeys.TRACKERS: Trackers = reader.ReadElementContentAsCollection<ProjectTracker>(); break;
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -215,33 +204,7 @@ namespace RedmineClient.Types
         #endregion
 
         #region Implementation of IJsonSerialization
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="writer"></param>
-        public override void WriteJson(JsonWriter writer)
-        {
-            using (new JsonObject(writer, RedmineKeys.PROJECT))
-            {
-                writer.WriteProperty(RedmineKeys.NAME, Name);
-                writer.WriteProperty(RedmineKeys.IDENTIFIER, Identifier);
-                writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
-                writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
-                writer.WriteIfNotDefaultOrNull(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
-                writer.WriteIfNotDefaultOrNull(RedmineKeys.IS_PUBLIC, IsPublic);
-                writer.WriteIfNotNull(RedmineKeys.PARENT_ID, Parent);
-                writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
-                writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
-             
-                if (Id == 0)
-                {
-                    writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
-                    return;
-                }
-                
-                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
-            }
-        }
+
 
         /// <summary>
         /// 
@@ -264,39 +227,51 @@ namespace RedmineClient.Types
                 switch (reader.Value)
                 {
                     case RedmineKeys.ID: Id = reader.ReadAsInt(); break;
-
-                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
-
-                    case RedmineKeys.IDENTIFIER: Identifier = reader.ReadAsString(); break;
-
-                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
-
-                    case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadAsInt(); break;
-
-                    case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
-
-                    case RedmineKeys.HOMEPAGE: HomePage = reader.ReadAsString(); break;
-
-                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
-
-                    case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadAsBool(); break;
-
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsNullableDateTime(); break;
-
-                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsNullableDateTime(); break;
-
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
-
+                    case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
                     case RedmineKeys.ENABLED_MODULES: EnabledModules = reader.ReadAsCollection<ProjectEnabledModule>(); break;
-
+                    case RedmineKeys.HOMEPAGE: HomePage = reader.ReadAsString(); break;
+                    case RedmineKeys.IDENTIFIER: Identifier = reader.ReadAsString(); break;
+                    case RedmineKeys.INHERIT_MEMBERS: InheritMembers = reader.ReadAsBool(); break;
+                    case RedmineKeys.IS_PUBLIC: IsPublic = reader.ReadAsBool(); break;
                     case RedmineKeys.ISSUE_CATEGORIES: IssueCategories = reader.ReadAsCollection<ProjectIssueCategory>(); break;
-
+                    case RedmineKeys.NAME: Name = reader.ReadAsString(); break;
+                    case RedmineKeys.PARENT: Parent = new IdentifiableName(reader); break;
+                    case RedmineKeys.STATUS: Status = (ProjectStatus)reader.ReadAsInt(); break;
                     case RedmineKeys.TIME_ENTRY_ACTIVITIES: TimeEntryActivities = reader.ReadAsCollection<ProjectTimeEntryActivity>(); break;
-
                     case RedmineKeys.TRACKERS: Trackers = reader.ReadAsCollection<ProjectTracker>(); break;
-
+                    case RedmineKeys.UPDATED_ON: UpdatedOn = reader.ReadAsNullableDateTime(); break;
                     default: reader.Read(); break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="writer"></param>
+        public override void WriteJson(JsonWriter writer)
+        {
+            using (new JsonObject(writer, RedmineKeys.PROJECT))
+            {
+                writer.WriteProperty(RedmineKeys.NAME, Name);
+                writer.WriteProperty(RedmineKeys.IDENTIFIER, Identifier);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.DESCRIPTION, Description);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.HOMEPAGE, HomePage);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.INHERIT_MEMBERS, InheritMembers);
+                writer.WriteIfNotDefaultOrNull(RedmineKeys.IS_PUBLIC, IsPublic);
+                writer.WriteIfNotNull(RedmineKeys.PARENT_ID, Parent);
+                writer.WriteRepeatableElement(RedmineKeys.TRACKER_IDS, (IEnumerable<IValue>)Trackers);
+                writer.WriteRepeatableElement(RedmineKeys.ENABLED_MODULE_NAMES, (IEnumerable<IValue>)EnabledModules);
+
+                if (Id == 0)
+                {
+                    writer.WriteRepeatableElement(RedmineKeys.ISSUE_CUSTOM_FIELD_IDS, (IEnumerable<IValue>)CustomFields);
+                    return;
+                }
+
+                writer.WriteArray(RedmineKeys.CUSTOM_FIELDS, CustomFields);
             }
         }
         #endregion
