@@ -116,6 +116,7 @@ namespace RedmineClient.Extensions
         public static float? ReadElementContentAsNullableFloat(this XmlReader reader)
         {
             var content = reader.ReadElementContentAsString();
+
             if (content.IsNullOrWhiteSpace() || !float.TryParse(content, NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var result))
             {
                 return null;
