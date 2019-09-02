@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Label="Build">
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net40</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>RedmineClient.Tests</RootNamespace>
     <AssemblyName>RedmineClient.Tests</AssemblyName>
     <Configurations>Debug;Release;DebugXml;DebugJson</Configurations>
-    <!--<DefineConstants>$(DefineConstants);XML;JSON</DefineConstants>
-    <Platform>x64 or x86</Platform>-->
+    <!--<DefineConstants>$(DefineConstants);XML;JSON</DefineConstants> -->
+    <Platform>x64 or x86</Platform>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Tests\Async\**" />
@@ -22,7 +22,12 @@
     <Compile Remove="Tests\RedmineTest.cs" />
   </ItemGroup>
 
-  <ItemGroup Label="Package References">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' " Label=".NET 4.0 Package References">
+    <Reference Include="System.Net" />
+    <PackageReference Include="xunit" Version="1.9.2" />
+    <PackageReference Include="xunit.abstractions" Version="2.0.3" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net40' " Label=".NET 4.5 Onwards Package References">
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
 
@@ -32,7 +37,10 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="Tests\" />
+  </ItemGroup>
+
+  <ItemGroup>
+   
   </ItemGroup>
 
 </Project>

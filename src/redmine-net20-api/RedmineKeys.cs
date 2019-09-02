@@ -1,5 +1,5 @@
 /*
-   Copyright 2016 - 2017 Adrian Popescu.
+   Copyright 2016 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -28,6 +28,10 @@ namespace RedmineClient
         /// 
         /// </summary>
         public const string ACTIVITY_ID = "activity_id";
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string ADMIN = "admin";
         /// <summary>
         /// 
         /// </summary>
@@ -104,6 +108,11 @@ namespace RedmineClient
         /// 
         /// </summary>
         public const string CREATED_ON = "created_on";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string CURRENT = "current";
 
         /// <summary>
         /// 
@@ -193,11 +202,16 @@ namespace RedmineClient
         /// <summary>
         /// 
         /// </summary>
-        public const string FILENAME = "filename";
+        public const string FILE_NAME = "filename";
         /// <summary>
         /// 
         /// </summary>
         public const string FILE_SIZE = "filesize";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const string FILES = "files";
         /// <summary>
         /// 
         /// </summary>
@@ -334,7 +348,7 @@ namespace RedmineClient
         /// <summary>
         /// 
         /// </summary>
-        public const string LASTNAME = "lastname";
+        public const string LAST_NAME = "lastname";
         /// <summary>
         /// 
         /// </summary>
@@ -650,6 +664,10 @@ namespace RedmineClient
         /// <summary>
         /// 
         /// </summary>
+        public const string VERSIONS = "versions";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string VISIBLE = "visible";
         /// <summary>
         /// 
@@ -666,10 +684,16 @@ namespace RedmineClient
         /// <summary>
         /// 
         /// </summary>
+        public const string WIKI = "wiki";
+        /// <summary>
+        /// 
+        /// </summary>
         public const string WIKI_PAGE = "wiki_page";
         /// <summary>
         /// 
         /// </summary>
         public const string WIKI_PAGES = "wiki_pages";
+
+        
     }
 }

@@ -100,6 +100,11 @@ namespace RedmineClient.Types
         public bool MustChangePassword { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public bool IsAdmin { get; internal set; }
+
+        /// <summary>
         /// Gets or sets the custom fields.
         /// </summary>
         /// <value>The custom fields.</value>
@@ -125,7 +130,7 @@ namespace RedmineClient.Types
         /// Gets or sets the user's mail_notification.
         /// </summary>
         /// <value>
-        /// only_my_events, only_assigned, [...]
+        /// only_my_events, only_assigned, none, [...]
         /// </value>
         public string MailNotification { get; set; }
         #endregion
@@ -156,13 +161,14 @@ namespace RedmineClient.Types
                     case RedmineKeys.FIRSTNAME: FirstName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.GROUPS: Groups = reader.ReadElementContentAsCollection<UserGroup>(); break;
                     case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadElementContentAsNullableDateTime(); break;
-                    case RedmineKeys.LASTNAME: LastName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.LAST_NAME: LastName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.LOGIN: Login = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.MAIL: Email = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.MAIL_NOTIFICATION: MailNotification = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadElementContentAsCollection<Membership>(); break;
                     case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadElementContentAsBoolean(); break;
                     case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadElementContentAsInt(); break;
+                    case RedmineKeys.ADMIN: IsAdmin = reader.ReadElementContentAsBoolean(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -176,7 +182,7 @@ namespace RedmineClient.Types
         {
             writer.WriteElementString(RedmineKeys.LOGIN, Login);
             writer.WriteElementString(RedmineKeys.FIRSTNAME, FirstName);
-            writer.WriteElementString(RedmineKeys.LASTNAME, LastName);
+            writer.WriteElementString(RedmineKeys.LAST_NAME, LastName);
             writer.WriteElementString(RedmineKeys.MAIL, Email);
             writer.WriteElementString(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
             writer.WriteElementString(RedmineKeys.PASSWORD, Password);
@@ -214,7 +220,7 @@ namespace RedmineClient.Types
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsDateTime(); break;
                     case RedmineKeys.CUSTOM_FIELDS: CustomFields = reader.ReadAsCollection<IssueCustomField>(); break;
                     case RedmineKeys.LAST_LOGIN_ON: LastLoginOn = reader.ReadAsDateTime(); break;
-                    case RedmineKeys.LASTNAME: LastName = reader.ReadAsString(); break;
+                    case RedmineKeys.LAST_NAME: LastName = reader.ReadAsString(); break;
                     case RedmineKeys.LOGIN: Login = reader.ReadAsString(); break;
                     case RedmineKeys.FIRSTNAME: FirstName = reader.ReadAsString(); break;
                     case RedmineKeys.GROUPS: Groups = reader.ReadAsCollection<UserGroup>(); break;
@@ -223,6 +229,7 @@ namespace RedmineClient.Types
                     case RedmineKeys.MEMBERSHIPS: Memberships = reader.ReadAsCollection<Membership>(); break;
                     case RedmineKeys.MUST_CHANGE_PASSWORD: MustChangePassword = reader.ReadAsBool(); break;
                     case RedmineKeys.STATUS: Status = (UserStatus)reader.ReadAsInt(); break;
+                    case RedmineKeys.ADMIN: IsAdmin = reader.ReadAsBool(); break;
                     default: reader.Read(); break;
                 }
             }
@@ -238,7 +245,7 @@ namespace RedmineClient.Types
             {
                 writer.WriteProperty(RedmineKeys.LOGIN, Login);
                 writer.WriteProperty(RedmineKeys.FIRSTNAME, FirstName);
-                writer.WriteProperty(RedmineKeys.LASTNAME, LastName);
+                writer.WriteProperty(RedmineKeys.LAST_NAME, LastName);
                 writer.WriteProperty(RedmineKeys.MAIL, Email);
                 writer.WriteProperty(RedmineKeys.MAIL_NOTIFICATION, MailNotification);
                 writer.WriteProperty(RedmineKeys.PASSWORD, Password);
@@ -272,6 +279,7 @@ namespace RedmineClient.Types
                 && LastLoginOn == other.LastLoginOn
                 && Status == other.Status
                 && MustChangePassword == other.MustChangePassword
+                && IsAdmin == other.IsAdmin
                 && (CustomFields != null ? CustomFields.Equals<IssueCustomField>(other.CustomFields) : other.CustomFields == null)
                 && (Memberships != null ? Memberships.Equals<Membership>(other.Memberships) : other.Memberships == null)
                 && (Groups != null ? Groups.Equals<UserGroup>(other.Groups) : other.Groups == null)
@@ -299,6 +307,7 @@ namespace RedmineClient.Types
                 hashCode = HashCodeHelper.GetHashCode(ApiKey, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Status, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(MustChangePassword, hashCode);
+                hashCode = HashCodeHelper.GetHashCode(IsAdmin, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(CustomFields, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Memberships, hashCode);
                 hashCode = HashCodeHelper.GetHashCode(Groups, hashCode);
@@ -323,6 +332,26 @@ MustChangePassword={MustChangePassword.ToString(CultureInfo.InvariantCulture)},
 CustomFields={CustomFields.Dump()}, 
 Memberships={Memberships.Dump()}, 
 Groups={Groups.Dump()}]";
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static class Include
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string Groups = "groups";
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string CustomFields = "custom_fields ";
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string Memberships = "memberships";
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup Label="Build">
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net40</TargetFramework>
     <TargetFrameworks>net20;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48</TargetFrameworks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -79,7 +79,6 @@
 
   <ItemGroup>
     <Compile Remove="Extensions\LoggerExtensions.cs" />
-    <Compile Remove="Extensions\WebExtensions.cs" />
     <Compile Remove="Internals\RedmineSerializer.cs" />
     <Compile Remove="Internals\UrlHelper.cs" />
     <Compile Remove="Internals\WebApiHelper.cs" />

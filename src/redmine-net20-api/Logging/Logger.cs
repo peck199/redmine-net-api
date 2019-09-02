@@ -21,8 +21,8 @@ namespace RedmineClient.Logging
     /// </summary>
     public static class Logger
     {
-        private static readonly object locker = new object();
-        private static ILogger logger;
+        private static readonly object _locker = new object();
+        private static ILogger _logger;
 
         /// <summary>
         /// Gets the current ILogger.
@@ -32,8 +32,8 @@ namespace RedmineClient.Logging
         /// </value>
         public static ILogger Current
         {
-            get { return logger ?? (logger = new ConsoleLogger()); }
-            private set { logger = value; }
+            get => _logger ?? (_logger = new ConsoleLogger());
+            private set => _logger = value;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace RedmineClient.Logging
         /// <param name="logger">The logger.</param>
         public static void UseLogger(ILogger logger)
         {
-            lock (locker)
+            lock (_locker)
             {
                 Current = logger;
             }

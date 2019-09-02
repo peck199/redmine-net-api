@@ -106,7 +106,7 @@ namespace RedmineClient.Types
                     case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadElementContentAsNullableDateTime(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadElementContentAsString(); break;
-                    case RedmineKeys.FILENAME: FileName = reader.ReadElementContentAsString(); break;
+                    case RedmineKeys.FILE_NAME: FileName = reader.ReadElementContentAsString(); break;
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadElementContentAsInt(); break;
                     case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadElementContentAsString(); break;
                     default: reader.Read(); break;
@@ -121,7 +121,7 @@ namespace RedmineClient.Types
         public override void WriteXml(XmlWriter writer)
         {
             writer.WriteElementString(RedmineKeys.DESCRIPTION, Description);
-            writer.WriteElementString(RedmineKeys.FILENAME, FileName);
+            writer.WriteElementString(RedmineKeys.FILE_NAME, FileName);
         }
 
         #endregion
@@ -153,7 +153,7 @@ namespace RedmineClient.Types
                     case RedmineKeys.CONTENT_URL: ContentUrl = reader.ReadAsString(); break;
                     case RedmineKeys.CREATED_ON: CreatedOn = reader.ReadAsNullableDateTime(); break;
                     case RedmineKeys.DESCRIPTION: Description = reader.ReadAsString(); break;
-                    case RedmineKeys.FILENAME: FileName = reader.ReadAsString(); break;
+                    case RedmineKeys.FILE_NAME: FileName = reader.ReadAsString(); break;
                     case RedmineKeys.FILE_SIZE: FileSize = reader.ReadAsInt(); break;
                     case RedmineKeys.THUMBNAIL_URL: ThumbnailUrl = reader.ReadAsString(); break;
                     default: reader.Read(); break;
@@ -170,7 +170,7 @@ namespace RedmineClient.Types
         {
             using (new JsonObject(writer, RedmineKeys.ATTACHMENT))
             {
-                writer.WriteProperty(RedmineKeys.FILENAME, FileName);
+                writer.WriteProperty(RedmineKeys.FILE_NAME, FileName);
                 writer.WriteProperty(RedmineKeys.DESCRIPTION, Description);
             }
         }

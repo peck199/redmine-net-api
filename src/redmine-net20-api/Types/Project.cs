@@ -355,6 +355,24 @@ CustomFields={CustomFields.Dump()},
 IssueCategories={IssueCategories.Dump()}, 
 EnabledModules={EnabledModules.Dump()}, 
 TimeEntryActivities = {TimeEntryActivities.Dump()}]";
-        
+
+        /// <summary>
+        /// Optional fetch data
+        /// </summary>
+        public static class Include
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string Trackers = "trackers";
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string IssueCategories = "issue_categories";
+            /// <summary>
+            /// (since 2.6.0)
+            /// </summary>
+            public const string EnabledModules = "enabled_modules";
+        }
     }
 }

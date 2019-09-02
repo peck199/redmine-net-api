@@ -1,3 +1,4 @@
+#if(!NET40)
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using Xunit.Sdk;
 
 namespace redmine.net.api.Tests.Infrastructure
 {
+
     /// <summary>
     /// Custom xUnit test case orderer that uses the OrderAttribute
     /// </summary>
@@ -39,3 +41,4 @@ namespace redmine.net.api.Tests.Infrastructure
         }
     }
 }
+#endif

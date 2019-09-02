@@ -75,6 +75,7 @@ namespace RedmineClient.Internals
                 var type = typeof(T);
 
                 var isNullable = Nullable.GetUnderlyingType(type) != null;
+
                 if (isNullable)
                 {
                     type = type.UnderlyingSystemType;

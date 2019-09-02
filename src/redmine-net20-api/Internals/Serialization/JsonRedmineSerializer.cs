@@ -137,6 +137,8 @@ namespace RedmineClient.Internals.Serialization
             }
         }
 
+        public string Type { get; } = "json";
+
         public string Serialize<T>(T entity) where T : class
         {
             if (entity == default(T))

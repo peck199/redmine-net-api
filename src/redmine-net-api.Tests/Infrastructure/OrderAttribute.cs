@@ -2,7 +2,7 @@ using System;
 
 namespace redmine.net.api.Tests.Infrastructure
 {
-    public class OrderAttribute : Attribute
+    public sealed class OrderAttribute : Attribute
     {
         public OrderAttribute(int index)
         {

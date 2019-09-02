@@ -67,6 +67,8 @@ namespace RedmineClient.Internals.Serialization
             }
         }
 
+        public string Type { get; } = "xml";
+
         public string Serialize<T>(T entity) where T : class
         {
             try
