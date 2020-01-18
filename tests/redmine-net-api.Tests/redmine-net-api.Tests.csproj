@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup Label="Build">
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TargetFramework>net48</TargetFramework>
-    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;</TargetFrameworks>
+<!--    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;</TargetFrameworks>-->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RootNamespace>redmine.net.api.Tests</RootNamespace>
     <AssemblyName>redmine-net-api.Tests</AssemblyName>
@@ -63,7 +63,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net48'">
-    <DefineConstants>NET48;NETFULL</DefineConstants>
+    <DefineConstants>NET48;NETFULL;JSON</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Label="Package References">
@@ -72,6 +72,8 @@
 <!--      <PrivateAssets>all</PrivateAssets>-->
 <!--      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->
 <!--    </PackageReference>-->
+
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.1" />
    
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>

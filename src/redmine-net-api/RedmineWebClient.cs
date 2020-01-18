@@ -133,5 +133,53 @@ namespace Redmine.Net.Api
 
             return base.GetWebRequest(address);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IgnoreErrors { get; set; } = false;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        protected override WebResponse GetWebResponse(WebRequest request)
+        {
+            WebResponse response = null;
+
+            try
+            {
+                response = base.GetWebResponse(request);
+            }
+            catch (Exception e)
+            {
+                if (e is WebException)
+                {
+                    if (IgnoreErrors)
+                    {
+                        WebException we = e as WebException;
+                        if (we.Status == WebExceptionStatus.ProtocolError)
+                        {
+                            response = we.Response;
+                        }
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            if (response == null) return null;
+
+            if (response is HttpWebResponse)
+            {
+               // HandleRedirect(request, response);
+              //  HandleCookies(request, response);
+            }
+
+            return response;
+        }
     }
 }

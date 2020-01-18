@@ -37,7 +37,7 @@ namespace Redmine.Net.Api
     /// <summary>
     ///     The main class to access Redmine API.
     /// </summary>
-    public class RedmineManager : IRedmineManager
+    public partial class RedmineManager : IRedmineManager
     {
         /// <summary>
         /// </summary>
