@@ -175,6 +175,12 @@ namespace Redmine.Net.Api.Extensions
                 using (var xmlTextReader =  XmlTextReaderBuilder.Create(stringReader))
                 {
                     xmlTextReader.ReadStartElement();
+
+                    if (result == null)
+                    {
+                        result = new List<T>();
+                    }
+
                     while (!xmlTextReader.EOF)
                     {
                         if (xmlTextReader.NodeType == XmlNodeType.EndElement)
@@ -203,11 +209,6 @@ namespace Redmine.Net.Api.Extensions
 
                         if (entity != null)
                         {
-                            if (result == null)
-                            {
-                                result = new List<T>();
-                            }
-
                             result.Add(entity);
                         }
 
