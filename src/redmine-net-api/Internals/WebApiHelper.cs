@@ -14,9 +14,11 @@
    limitations under the License.
 */
 
+using System;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Serialization;
 using Redmine.Net.Api.Types;
@@ -124,7 +126,7 @@ namespace Redmine.Net.Api.Internals
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
         public static PagedResults<T> ExecuteDownloadList<T>(RedmineManager redmineManager, string address,
-            
+
             NameValueCollection parameters = null) where T : class, new()
         {
             using (var wc = redmineManager.CreateWebClient(parameters))
@@ -132,6 +134,33 @@ namespace Redmine.Net.Api.Internals
                 try
                 {
                     var response = wc.DownloadString(address);
+                    return redmineManager.Serializer.DeserializeToPagedResults<T>(response);
+                }
+                catch (WebException webException)
+                {
+                    webException.HandleWebException(redmineManager.Serializer);
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Executes the download list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="address">The address.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        public static async Task<PagedResults<T>> ExecuteDownloadListAsync<T>(RedmineManager redmineManager, string address,
+
+            NameValueCollection parameters = null) where T : class, new()
+        {
+            using (var wc = redmineManager.CreateWebClient(parameters))
+            {
+                try
+                {
+                    var response = await wc.DownloadStringTaskAsync(address).ConfigureAwait(true);
                     return redmineManager.Serializer.DeserializeToPagedResults<T>(response);
                 }
                 catch (WebException webException)

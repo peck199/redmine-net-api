@@ -23,6 +23,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
@@ -64,10 +65,12 @@ namespace Redmine.Net.Api
             {typeof(IssuePriority), "enumerations/issue_priorities"},
             {typeof(Watcher), "watchers"},
             {typeof(IssueCustomField), "custom_fields"},
-            {typeof(CustomField), "custom_fields"}
+            {typeof(CustomField), "custom_fields"},
+            {typeof(MembershipRole), "roles"},
+            
      //       {typeof(WikiPage), ""}
         };
-        
+
         private static readonly Dictionary<Type, bool> typesWithOffset = new Dictionary<Type, bool>{
             {typeof(Issue), true},
             {typeof(Project), true},
@@ -185,10 +188,10 @@ namespace Redmine.Net.Api
         {
             cache = new CredentialCache { { new Uri(host), "Basic", new NetworkCredential(login, password) } };
 
-            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format(CultureInfo.InvariantCulture,"{0}:{1}", login, password)));
-            basicAuthorization = string.Format(CultureInfo.InvariantCulture,"Basic {0}", token);
+            var token = Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}:{1}", login, password)));
+            basicAuthorization = string.Format(CultureInfo.InvariantCulture, "Basic {0}", token);
 
-            
+
         }
 
         /// <summary>
@@ -203,7 +206,7 @@ namespace Redmine.Net.Api
         /// 
         /// </summary>
         public string Format { get; }
-        
+
         /// <summary>
         ///     Gets the host.
         /// </summary>
@@ -294,7 +297,7 @@ namespace Redmine.Net.Api
         public User GetCurrentUser(NameValueCollection parameters = null)
         {
             var url = UrlHelper.GetCurrentUserUrl(this);
-            return WebApiHelper.ExecuteDownload<User>(this, url,  parameters);
+            return WebApiHelper.ExecuteDownload<User>(this, url, parameters);
         }
 
         /// <summary>
@@ -354,9 +357,9 @@ namespace Redmine.Net.Api
             if (string.IsNullOrEmpty(result)) return null;
 
             var url = UrlHelper.GetWikiCreateOrUpdaterUrl(this, projectId, pageName);
-            
+
             url = Uri.EscapeUriString(url);
-            
+
             return WebApiHelper.ExecuteUpload<WikiPage>(this, url, HttpVerbs.PUT, result);
         }
 
@@ -370,9 +373,9 @@ namespace Redmine.Net.Api
         /// <returns></returns>
         public WikiPage GetWikiPage(string projectId, NameValueCollection parameters, string pageName, uint version = 0)
         {
-            var url = UrlHelper.GetWikiPageUrl(this, projectId,  pageName, version);
+            var url = UrlHelper.GetWikiPageUrl(this, projectId, pageName, version);
             url = Uri.EscapeUriString(url);
-            return WebApiHelper.ExecuteDownload<WikiPage>(this, url,  parameters);
+            return WebApiHelper.ExecuteDownload<WikiPage>(this, url, parameters);
         }
 
         /// <summary>
@@ -384,7 +387,7 @@ namespace Redmine.Net.Api
         {
             var url = UrlHelper.GetWikisUrl(this, projectId);
             var result = WebApiHelper.ExecuteDownloadList<WikiPage>(this, url);
-            return result == null ? null :new List<WikiPage>(result.Items);
+            return result == null ? null : new List<WikiPage>(result.Items);
         }
 
         /// <summary>
@@ -473,6 +476,20 @@ namespace Redmine.Net.Api
         }
 
         /// <summary>
+        ///     Gets the paginated objects.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public async Task<PagedResults<T>> GetPaginatedObjectsAsync<T>(int offset, int limit = DEFAULT_PAGE_SIZE_VALUE) where T : class, new()
+        {
+            var parameters = new NameValueCollection();
+            parameters.Set(RedmineKeys.LIMIT, limit.ToString(CultureInfo.InvariantCulture));
+            parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+            var url = UrlHelper.GetListUrl<T>(this, parameters);
+            return await WebApiHelper.ExecuteDownloadListAsync<T>(this, url, parameters).ConfigureAwait(true);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="include"></param>
@@ -544,6 +561,36 @@ namespace Redmine.Net.Api
         /// <returns>
         ///     Returns a complete list of objects.
         /// </returns>
+        public async Task<List<T>> GetObjectsAsync<T>(int offset, int pageSize = DEFAULT_PAGE_SIZE_VALUE) where T : class, new()
+        {
+            var hasOffset = typesWithOffset.ContainsKey(typeof(T));
+            if (hasOffset)
+            {
+                try
+                {
+                    var data = await GetPaginatedObjectsAsync<T>(offset, pageSize).ConfigureAwait(true);
+                    return new List<T>(data.Items);
+                }
+                catch (WebException wex)
+                {
+                    wex.HandleWebException(Serializer);
+                    return null;
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException($"The type {nameof(T)} is not paginateable.");
+            }
+        }
+
+        /// <summary>
+        ///     Returns the complete list of objects.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
+        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
+        /// <returns>
+        ///     Returns a complete list of objects.
+        /// </returns>
         public List<T> GetObjects<T>(NameValueCollection parameters) where T : class, new()
         {
             int totalCount = 0, pageSize = 0, offset = 0;
@@ -568,26 +615,26 @@ namespace Redmine.Net.Api
             try
             {
                 var hasOffset = typesWithOffset.ContainsKey(typeof(T));
-                if(hasOffset)
+                if (hasOffset)
                 {
-                   do
-                   {
-                       parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
-                       var tempResult = GetPaginatedObjects<T>(parameters);
-                       if (tempResult != null)
-                       {
-                           if (resultList == null)
-                           {
-                               resultList = new List<T>(tempResult.Items);
-                               totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
-                           }
-                           else
-                           {
-                               resultList.AddRange(tempResult.Items);
-                           }
-                       }
-                       offset += pageSize;
-                   } while (offset < totalCount);
+                    do
+                    {
+                        parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+                        var tempResult = GetPaginatedObjects<T>(parameters);
+                        if (tempResult != null)
+                        {
+                            if (resultList == null)
+                            {
+                                resultList = new List<T>(tempResult.Items);
+                                totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
+                            }
+                            else
+                            {
+                                resultList.AddRange(tempResult.Items);
+                            }
+                        }
+                        offset += pageSize;
+                    } while (offset < totalCount);
                 }
                 else
                 {
@@ -595,14 +642,88 @@ namespace Redmine.Net.Api
                     if (result != null)
                     {
                         return new List<T>(result.Items);
-                    } 
+                    }
                 }
             }
             catch (WebException wex)
             {
-                wex.HandleWebException( Serializer);
+                wex.HandleWebException(Serializer);
             }
             return resultList;
+        }
+
+        /// <summary>
+        ///     Returns the complete list of objects.
+        /// </summary>
+        /// <typeparam name="T">The type of objects to retrieve.</typeparam>
+        /// <param name="parameters">Optional filters and/or optional fetched data.</param>
+        /// <returns>
+        ///     Returns a complete list of objects.
+        /// </returns>
+        public IEnumerable<T> GetObjectsEnumerable<T>(NameValueCollection parameters) where T : class, new()
+        {
+            int totalCount = 0, pageSize = 0, offset = 0;
+            var isLimitSet = false;
+            List<T> resultList = null;
+
+            if (parameters == null)
+            {
+                parameters = new NameValueCollection();
+            }
+            else
+            {
+                isLimitSet = int.TryParse(parameters[RedmineKeys.LIMIT], out pageSize);
+                int.TryParse(parameters[RedmineKeys.OFFSET], out offset);
+            }
+            if (pageSize == default(int))
+            {
+                pageSize = PageSize > 0 ? PageSize : DEFAULT_PAGE_SIZE_VALUE;
+                parameters.Set(RedmineKeys.LIMIT, pageSize.ToString(CultureInfo.InvariantCulture));
+            }
+
+            var hasOffset = typesWithOffset.ContainsKey(typeof(T));
+            if (hasOffset)
+            {
+                do
+                {
+                    PagedResults<T> tempResult = null;
+                    try
+                    {
+                        parameters.Set(RedmineKeys.OFFSET, offset.ToString(CultureInfo.InvariantCulture));
+                        tempResult = GetPaginatedObjects<T>(parameters);
+                    }
+                    catch (WebException wex)
+                    {
+                        wex.HandleWebException(Serializer);
+                    }
+                    if (tempResult != null)
+                    {
+                        if (resultList == null)
+                        {
+                            //resultList = new List<T>(tempResult.Items);
+                            foreach (var item in tempResult.Items)
+                                yield return item;
+
+                            totalCount = isLimitSet ? pageSize : tempResult.TotalItems;
+                        }
+                        else
+                        {
+                            resultList.AddRange(tempResult.Items);
+                        }
+                    }
+                    offset += pageSize;
+                } while (offset < totalCount);
+            }
+            else
+            {
+                var result = GetPaginatedObjects<T>(parameters);
+                if (result != null)
+                {
+                    foreach (var item in result.Items)
+                        yield return item;
+                }
+            }
+
         }
 
         /// <summary>
@@ -691,6 +812,28 @@ namespace Redmine.Net.Api
             var data = Serializer.Serialize(obj);
             data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
             WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, data);
+        }
+
+        /// <summary>
+        ///     Updates a Redmine object.
+        /// </summary>
+        /// <typeparam name="T">The type of object to be update.</typeparam>
+        /// <param name="id">The id of the object to be update.</param>
+        /// <param name="obj">The object to be update.</param>
+        /// <param name="projectId">The project identifier.</param>
+        /// <exception cref="RedmineException"></exception>
+        /// <remarks>
+        ///     When trying to update an object with invalid or missing attribute parameters, you will get a
+        ///     422(RedmineException) Unprocessable Entity response. That means that the object could not be updated.
+        /// </remarks>
+        /// <code></code>
+        public T UpdateAndGetObject<T>(string id, T obj, string projectId) where T : class, new()
+        {
+            var url = UrlHelper.GetUploadUrl<T>(this, id);
+            var data = Serializer.Serialize(obj);
+            data = Regex.Replace(data, @"\r\n|\r|\n", "\r\n");
+            WebApiHelper.ExecuteUpload(this, url, HttpVerbs.PUT, data);
+            return GetObject<T>(id, new NameValueCollection());
         }
 
         /// <summary>
@@ -842,7 +985,7 @@ namespace Redmine.Net.Api
                 return true;
             }
 
-           // Logger.Current.Error("X509Certificate [{0}] Policy Error: '{1}'", cert.Subject, error);
+            // Logger.Current.Error("X509Certificate [{0}] Policy Error: '{1}'", cert.Subject, error);
 
             return false;
         }
