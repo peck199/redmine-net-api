@@ -187,7 +187,7 @@ namespace Redmine.Net.Api.Internals
         {
             var type = typeof(T);
 
-            if (!RedmineManager.Sufixes.ContainsKey(type)) throw new KeyNotFoundException(type.Name);
+            if (!RedmineManager.Sufixes.TryGetValue(type, out var typeSuffix)) throw new KeyNotFoundException(type.Name);
 
             if (type == typeof(Version) || type == typeof(IssueCategory) || type == typeof(ProjectMembership))
             {
@@ -196,7 +196,7 @@ namespace Redmine.Net.Api.Internals
                     throw new RedmineException("The project id is mandatory! \nCheck if you have included the parameter project_id to parameters.");
 
                 return string.Format(CultureInfo.InvariantCulture,ENTITY_WITH_PARENT_FORMAT, redmineManager.Host, RedmineKeys.PROJECTS,
-                    projectId, RedmineManager.Sufixes[type], redmineManager.Format);
+                    projectId, typeSuffix, redmineManager.Format);
             }
             if (type == typeof(IssueRelation))
             {
@@ -205,7 +205,7 @@ namespace Redmine.Net.Api.Internals
                     throw new RedmineException("The issue id is mandatory! \nCheck if you have included the parameter issue_id to parameters");
 
                 return string.Format(CultureInfo.InvariantCulture,ENTITY_WITH_PARENT_FORMAT, redmineManager.Host, RedmineKeys.ISSUES,
-                    issueId, RedmineManager.Sufixes[type], redmineManager.Format);
+                    issueId, typeSuffix, redmineManager.Format);
             }
 
             if (type == typeof(File))
