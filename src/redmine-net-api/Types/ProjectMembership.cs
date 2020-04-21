@@ -43,7 +43,7 @@ namespace Redmine.Net.Api.Types
         /// Gets or sets the project.
         /// </summary>
         /// <value>The project.</value>
-        public IdentifiableName Project { get; internal set; }
+        public IdentifiableName Project { get; set; }
 
         /// <summary>
         /// Gets or sets the user.

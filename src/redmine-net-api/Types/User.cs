@@ -34,6 +34,18 @@ namespace Redmine.Net.Api.Types
     [XmlRoot(RedmineKeys.USER)]
     public sealed class User : Identifiable<User>
     {
+        public User() { }
+
+        internal User(XmlReader reader)
+        {
+            ReadXml(reader);
+        }
+
+        internal User(JsonReader reader)
+        {
+            ReadJson(reader);
+        }
+
         #region Properties
         /// <summary>
         /// Gets or sets the user login.
@@ -260,12 +272,12 @@ namespace Redmine.Net.Api.Types
         {
             if (other == null) return false;
             return Id == other.Id
-                && string.Equals(Login,other.Login, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(FirstName,other.FirstName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(LastName,other.LastName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(Email,other.Email, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(MailNotification,other.MailNotification, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(ApiKey,other.ApiKey, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Login, other.Login, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(FirstName, other.FirstName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(LastName, other.LastName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Email, other.Email, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(MailNotification, other.MailNotification, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(ApiKey, other.ApiKey, StringComparison.OrdinalIgnoreCase)
                 && AuthenticationModeId == other.AuthenticationModeId
                 && CreatedOn == other.CreatedOn
                 && LastLoginOn == other.LastLoginOn

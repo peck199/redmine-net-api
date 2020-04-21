@@ -31,14 +31,14 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
-    public abstract class Identifiable<T> : IXmlSerializable, IJsonSerializable, IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
+    public abstract class Identifiable<T> : IIdentifiable, IXmlSerializable, IJsonSerializable, IEquatable<T>, IEquatable<Identifiable<T>> where T : Identifiable<T>
     {
         #region Properties
         /// <summary>
         /// Gets the id.
         /// </summary>
         /// <value>The id.</value>
-        public int Id { get; protected internal set; }
+        public int Id { get; set; }
         #endregion
 
         #region Implementation of IXmlSerialization

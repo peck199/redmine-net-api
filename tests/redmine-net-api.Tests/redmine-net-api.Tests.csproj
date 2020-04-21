@@ -4,8 +4,7 @@
 
   <PropertyGroup Label="Build">
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TargetFramework>net48</TargetFramework>
-    <TargetFrameworks>net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;</TargetFrameworks>
+    <TargetFramework>net461</TargetFramework>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <RootNamespace>redmine.net.api.Tests</RootNamespace>
     <AssemblyName>redmine-net-api.Tests</AssemblyName>

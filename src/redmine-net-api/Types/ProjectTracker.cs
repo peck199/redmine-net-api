@@ -47,7 +47,7 @@ namespace Redmine.Net.Api.Types
         /// 
         /// </summary>
         /// <param name="trackerId"></param>
-        internal ProjectTracker(int trackerId)
+        public ProjectTracker(int trackerId)
         {
             Id = trackerId;
         }
