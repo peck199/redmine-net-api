@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Redmine.Net.Api.Exceptions;
 using Redmine.Net.Api.Extensions;
 using Redmine.Net.Api.Internals;
 using Redmine.Net.Api.Serialization;
@@ -122,8 +123,11 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteXml(XmlWriter writer)
         {
+            AssertValidIssueRelationType();
+
             writer.WriteElementString(RedmineKeys.ISSUE_TO_ID, IssueToId.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString());
+            writer.WriteElementString(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInv());
+
             if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
             {
                 writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
@@ -138,10 +142,13 @@ namespace Redmine.Net.Api.Types
         /// <param name="writer"></param>
         public override void WriteJson(JsonWriter writer)
         {
+            AssertValidIssueRelationType();
+
             using (new JsonObject(writer, RedmineKeys.RELATION))
             {
                 writer.WriteProperty(RedmineKeys.ISSUE_TO_ID, IssueToId);
-                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type);
+                writer.WriteProperty(RedmineKeys.RELATION_TYPE, Type.ToString().ToLowerInv());
+
                 if (Type == IssueRelationType.Precedes || Type == IssueRelationType.Follows)
                 {
                     writer.WriteValueOrEmpty(RedmineKeys.DELAY, Delay);
@@ -173,9 +180,33 @@ namespace Redmine.Net.Api.Types
                     case RedmineKeys.DELAY: Delay = reader.ReadAsInt32(); break;
                     case RedmineKeys.ISSUE_ID: IssueId = reader.ReadAsInt(); break;
                     case RedmineKeys.ISSUE_TO_ID: IssueToId = reader.ReadAsInt(); break;
-                    case RedmineKeys.RELATION_TYPE: Type = (IssueRelationType)reader.ReadAsInt(); break;
+                    case RedmineKeys.RELATION_TYPE: Type = ReadIssueRelationType(reader); break;
                 }
             }
+        }
+
+        private void AssertValidIssueRelationType()
+        {
+            if (Type == IssueRelationType.Undefined)
+            {
+                throw new RedmineException($"The value `{nameof(IssueRelationType)}.`{nameof(IssueRelationType.Undefined)}` is not allowed to create relations!");
+            }
+        }
+
+        private static IssueRelationType ReadIssueRelationType(JsonReader reader)
+        {
+            var enumValue = reader.ReadAsString();
+            if (enumValue.IsNullOrWhiteSpace())
+            {
+                return IssueRelationType.Undefined;
+            }
+            
+            if (short.TryParse(enumValue, out var enumId))
+            {
+                return (IssueRelationType)enumId;
+            }
+            
+            return (IssueRelationType)Enum.Parse(typeof(IssueRelationType), enumValue, true);
         }
         #endregion
 

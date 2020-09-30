@@ -15,10 +15,10 @@
 */
 
 
-using System.Threading;
 #if NET40
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Threading;
 using System.Threading.Tasks;
 using Redmine.Net.Api.Types;
 using Redmine.Net.Api.Serialization;
@@ -49,9 +49,22 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
-        public static Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
+        public static Task<WikiPage> CreateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
-            return Task.Factory.StartNew(() => redmineManager.CreateOrUpdateWikiPage(projectId, pageName, wikiPage), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+            return Task.Factory.StartNew(() => redmineManager.CreateWikiPage(projectId, pageName, wikiPage), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="redmineManager"></param>
+        /// <param name="projectId"></param>
+        /// <param name="pageName"></param>
+        /// <param name="wikiPage"></param>
+        /// <returns></returns>
+        public static Task UpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
+        {
+            return Task.Factory.StartNew(() => redmineManager.UpdateWikiPage(projectId, pageName, wikiPage), CancellationToken.None, TaskCreationOptions.None, TaskScheduler.Default);
         }
 
         /// <summary>

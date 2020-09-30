@@ -13,7 +13,7 @@ namespace Redmine.Net.Api.Serialization
 
         public XmlRedmineSerializer()
         {
-            XMLWriterSettings = new XmlWriterSettings
+            xmlWriterSettings = new XmlWriterSettings
             {
                 OmitXmlDeclaration = true
             };
@@ -21,10 +21,10 @@ namespace Redmine.Net.Api.Serialization
 
         public XmlRedmineSerializer(XmlWriterSettings xmlWriterSettings)
         {
-            XMLWriterSettings = xmlWriterSettings;
+            this.xmlWriterSettings = xmlWriterSettings;
         }
 
-        private readonly XmlWriterSettings XMLWriterSettings;
+        private readonly XmlWriterSettings xmlWriterSettings;
 
         public T Deserialize<T>(string response) where T : new()
         {
@@ -50,6 +50,7 @@ namespace Redmine.Net.Api.Serialization
             }
         }
 
+#pragma warning disable CA1822
         public int Count<T>(string xmlResponse) where T : class, new()
         {
             try
@@ -62,6 +63,7 @@ namespace Redmine.Net.Api.Serialization
                 throw new RedmineException(ex.Message, ex);
             }
         }
+#pragma warning restore CA1822
 
         public string Type { get; } = "xml";
 
@@ -99,10 +101,12 @@ namespace Redmine.Net.Api.Serialization
                     xmlReader.Read();
 
                     var totalItems = xmlReader.ReadAttributeAsInt(RedmineKeys.TOTAL_COUNT);
+                    
                     if (onlyCount)
                     {
                         return new PagedResults<T>(null, totalItems, 0, 0);
                     }
+                    
                     var offset = xmlReader.ReadAttributeAsInt(RedmineKeys.OFFSET);
                     var limit = xmlReader.ReadAttributeAsInt(RedmineKeys.LIMIT);
                     var result = xmlReader.ReadElementContentAsCollection<T>();
@@ -131,7 +135,7 @@ namespace Redmine.Net.Api.Serialization
 
             using (var stringWriter = new StringWriter())
             {
-                using (var xmlWriter = XmlWriter.Create(stringWriter, XMLWriterSettings))
+                using (var xmlWriter = XmlWriter.Create(stringWriter, xmlWriterSettings))
                 {
                     var serializer = new XmlSerializer(typeof(T));
 
@@ -155,7 +159,7 @@ namespace Redmine.Net.Api.Serialization
         ///     using the System.Exception.InnerException property.
         /// </exception>
         // ReSharper disable once InconsistentNaming
-        private TOut XmlDeserializeEntity<TOut>(string xml) where TOut : new()
+        private static TOut XmlDeserializeEntity<TOut>(string xml) where TOut : new()
         {
             if (xml.IsNullOrWhiteSpace())
             {

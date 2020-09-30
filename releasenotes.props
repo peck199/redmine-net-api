@@ -1,0 +1,13 @@
+<Project>
+    <PropertyGroup>
+        <PackageReleaseNotes Condition="'$(VersionPrefix)' == '4.1.0'">
+            <![CDATA[
+Fixes:
+* Wrong encoding of special characters in URLs causes 404 (#274).
+* Adding custom fileds to project (#276,#277).
+]]>
+        </PackageReleaseNotes>
+        <PackageReleaseNotes>$(PackageReleaseNotes)
+            See $(PackageProjectUrl)/blob/master/CHANGELOG.md#v$(VersionPrefix.Replace('.','')) for more details.</PackageReleaseNotes>
+    </PropertyGroup>
+</Project>

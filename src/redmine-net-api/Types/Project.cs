@@ -1,4 +1,4 @@
-﻿/*
+/*
    Copyright 2011 - 2019 Adrian Popescu.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,7 @@ namespace Redmine.Net.Api.Types
         /// <summary>
         /// 
         /// </summary>
-        new public string Name { get; set; }
+        public new string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the identifier.
@@ -122,12 +122,12 @@ namespace Redmine.Net.Api.Types
         public IList<ProjectEnabledModule> EnabledModules { get; set; }
 
         /// <summary>
-        /// Gets the custom fields.
+        /// Gets or sets the custom fields.
         /// </summary>
         /// <value>
         /// The custom fields.
         /// </value>
-        public IList<IssueCustomField> CustomFields { get; internal set; }
+        public IList<IssueCustomField> CustomFields { get; set; }
 
         /// <summary>
         /// Gets the issue categories.

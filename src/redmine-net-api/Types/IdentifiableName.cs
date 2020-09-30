@@ -29,7 +29,19 @@ namespace Redmine.Net.Api.Types
     /// </summary>
     [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
     public class IdentifiableName : Identifiable<IdentifiableName>
+    
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static T Create<T>(int id) where T: IdentifiableName, new()
+        { 
+            var t = new T (){Id = id};
+            return t;
+        }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentifiableName"/> class.
         /// </summary>
@@ -50,7 +62,7 @@ namespace Redmine.Net.Api.Types
         /// <param name="reader"></param>
         public IdentifiableName(JsonReader reader)
         {
-            InitializeJsonReader(reader);
+            Initialize(reader);
         }
 
         private void Initialize(XmlReader reader)
@@ -58,7 +70,7 @@ namespace Redmine.Net.Api.Types
             ReadXml(reader);
         }
 
-        private void InitializeJsonReader(JsonReader reader)
+        private void Initialize(JsonReader reader)
         {
             ReadJson(reader);
         }

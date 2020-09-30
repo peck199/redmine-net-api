@@ -54,7 +54,7 @@ namespace Redmine.Net.Api.Async
         /// <param name="pageName">Name of the page.</param>
         /// <param name="wikiPage">The wiki page.</param>
         /// <returns></returns>
-        public static async Task<WikiPage> CreateOrUpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
+        public static async Task<WikiPage> CreateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
         {
             var data = redmineManager.Serializer.Serialize(wikiPage);
             if (string.IsNullOrEmpty(data)) return null;
@@ -67,6 +67,29 @@ namespace Redmine.Net.Api.Async
             return redmineManager.Serializer.Deserialize<WikiPage>(response);
         }
 
+ /// <summary>
+        ///     Creates the or update wiki page asynchronous.
+        /// </summary>
+        /// <param name="redmineManager">The redmine manager.</param>
+        /// <param name="projectId">The project identifier.</param>
+        /// <param name="pageName">Name of the page.</param>
+        /// <param name="wikiPage">The wiki page.</param>
+        /// <returns></returns>
+        public static async Task UpdateWikiPageAsync(this RedmineManager redmineManager, string projectId, string pageName, WikiPage wikiPage)
+        {
+            var data = redmineManager.Serializer.Serialize(wikiPage);
+            if (string.IsNullOrEmpty(data))
+            {
+                return ;
+            }
+
+            var url = UrlHelper.GetWikiCreateOrUpdaterUrl(redmineManager, projectId, pageName);
+
+            url = Uri.EscapeUriString(url);
+
+            var response = await WebApiAsyncHelper.ExecuteUpload(redmineManager, url, HttpVerbs.PUT, data).ConfigureAwait(false);
+        }
+
         /// <summary>
         ///     Deletes the wiki page asynchronous.
         /// </summary>
@@ -77,7 +100,7 @@ namespace Redmine.Net.Api.Async
         public static async Task DeleteWikiPageAsync(this RedmineManager redmineManager, string projectId,
             string pageName)
         {
-            var uri = UrlHelper.GetDeleteWikirUrl(redmineManager, projectId, pageName);
+            var uri = UrlHelper.GetDeleteWikiUrl(redmineManager, projectId, pageName);
             uri = Uri.EscapeUriString(uri);
             await WebApiAsyncHelper.ExecuteUpload(redmineManager, uri, HttpVerbs.DELETE, string.Empty).ConfigureAwait(false);
         }
